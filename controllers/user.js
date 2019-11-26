@@ -1,5 +1,5 @@
 const db = require('../models');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 const salt = bcrypt.genSaltSync(10);
 
 var jwt = require('jsonwebtoken');
