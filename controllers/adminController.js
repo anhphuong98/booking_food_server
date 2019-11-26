@@ -1,6 +1,6 @@
 model = require('../models');
 bcrypt = require('bcrypt-nodejs');
-config = require('../config/config.js')
+var secretOrKey = require('../config/secretOrKey');
 jwt = require('jsonwebtoken');
 
 //login
@@ -22,7 +22,7 @@ const login = (req, res) => {
     
     //login without default password
         if (admin.password != '123456') {
-            var validPassword = bcrypt.compareSync(password, bcrypt.hashSync(admin.password));
+            var validPassword = bcrypt.compareSync(password, admin.password);
             if(!validPassword){
             return res.status(400).json({
                 success: false,
@@ -45,7 +45,7 @@ const login = (req, res) => {
         var token = jwt.sign({
             id: admin.id
         },
-            config.secret,
+            secretOrKey,
             {
                 expiresIn: 86400 //valid in 24hours
             })
@@ -66,6 +66,7 @@ const getAdmin = (req, res)=>{
     const token = req.header.token;
     model.admin.findOne({
         where: {
+
         }
     })
 }

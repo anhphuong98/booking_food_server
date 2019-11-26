@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start:dev": "nodemon ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -20,8 +19,8 @@
     "mysql2": "^2.0.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0",
-    "sequelize": "^5.21.2"
+    "sequelize": "^5.21.2",
+    "static-favicon": "^2.0.0-alpha"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"
