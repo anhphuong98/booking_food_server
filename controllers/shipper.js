@@ -1,7 +1,7 @@
 const db = require('../models');
 const secretOrKey = require('../config/secretOrKey');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 const salt = bcrypt.genSaltSync(10);
 
 const index = function(req, res){
@@ -23,7 +23,6 @@ const login = function(req, res){
             });
         }
         var passwordIsValid = bcrypt.compareSync(req.body.password, shipper.password);
-
         if(!passwordIsValid){
             res.json({
                 success : false,
