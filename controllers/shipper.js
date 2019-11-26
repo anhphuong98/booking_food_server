@@ -23,7 +23,6 @@ const login = function(req, res){
             });
         }
         var passwordIsValid = bcrypt.compareSync(req.body.password, shipper.password);
-
         if(!passwordIsValid){
             res.json({
                 success : false,
