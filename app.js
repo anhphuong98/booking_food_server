@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-// Khai bao passport va session de luu thong tin nguoi dung
+ // Khai bao passport va session de luu thong tin nguoi dung
 var passport = require('./middleware/passport');
 var session = require('express-session');
 // Goi API
@@ -16,7 +16,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
-
 
 
 // view engine setup

@@ -1,14 +1,15 @@
-model = require('../models');
+db = require('../models');
 bcrypt = require('bcrypt-nodejs');
 var secretOrKey = require('../config/secretOrKey');
 jwt = require('jsonwebtoken');
+const salt = bcrypt.genSaltSync(10);
 
 //login
 const login = (req, res) => {
     console.log("Sign in");
     const { email, password } = req.body;
 
-    model.admin.findOne({
+    db.admin.findOne({
         where: {
             email: email
         }
@@ -42,10 +43,12 @@ const login = (req, res) => {
         }
 
     //successful login
-        var token = jwt.sign({
-            id: admin.id
-        },
-            secretOrKey,
+    var payload = {
+        id: admin.id, 
+        name: admin.name, 
+        password: admin.password
+    }
+        var token = jwt.sign(payload,secretOrKey,
             {
                 expiresIn: 86400 //valid in 24hours
             })
@@ -62,18 +65,47 @@ const login = (req, res) => {
 //get admin
 const getAdmin = (req, res)=>{
     console.log("get Admin");
-
-    const token = req.header.token;
-    model.admin.findOne({
+    db.admin.findOne({
         where: {
-
+            id: req.user.id
+        }
+    }).then(function(admin){
+        if(admin){
+            res.json({
+                success: true,
+                data: admin
+            })
+        } else {
+            res.json({
+                success: false,
+                message: "Cannot get admin, please check your password again"
+            })
         }
     })
 }
 
+//update information
+const updateAdminInfo = (req, res) => {
+    db.admin.update({
+        name: req.body.name,
+        password: bcrypt.hashSync(req.body.password, salt)
+    }, {
+        where: {
+            id: req.user.id 
+        }
+    }).then(function(admin) {
+        res.json({
+            success: true,
+            message: "account updated"
+        })
+    }
+       
+    )
+}
 
 const adminController = {};
 adminController.login = login;
 adminController.getAdmin = getAdmin;
+adminController.updateAdminInfo = updateAdminInfo;
 
 module.exports = adminController

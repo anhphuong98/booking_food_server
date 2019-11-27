@@ -24,7 +24,6 @@ const login = function(req, res){
             });
         }
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        console.log(passwordIsValid)
         if(!passwordIsValid){
             res.json({
                 success : false,
@@ -110,7 +109,9 @@ const getUserInfo = function(req, res){
 
 const show = function(req, res){
     db.user.findOne({
-        id : req.params.id
+        where : {
+            id : req.params.id
+        }
     }).then(function(user){
         if(!user){
             res.json({

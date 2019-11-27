@@ -2,21 +2,21 @@ const user = require('../controllers/user');
 const shipper = require('../controllers/shipper');
 const adminController = require('../controllers/adminController');
 
-const passport = require('passport');
+const passport = require('../middleware/passport');
 
 module.exports = (app) => {
 
     // user
         //  get all user for admin
-    app.get('/api/user' , user.index);
+    app.get('/api/user', passport.authenticate('jwt-admin', {session: false}), user.index);
         // get info user for admin
-    app.get('/api/user/:id', user.show);
+    app.get('/user/:id', passport.authenticate('jwt-admin', {session: false}), user.show);
         // delete account for admin
     app.delete('/api/user/:id', user.destroy);
         // admin sua tai khoan nguoi dung
     app.put('/api/user/:id', user.adminUpdate);
         //get info user cua nguoi dung hien dang dang nhap
-    app.get('/api/user/getUserInfo', passport.authenticate('jwt-user', {session : false}), user.getUserInfo);
+    app.get('/api/user/getUserInfo',passport.authenticate('jwt-user', {session : false}), user.getUserInfo);
         // user login
     app.post('/api/user/login', user.login);
         // user register
@@ -48,7 +48,9 @@ module.exports = (app) => {
     // admin
         //login for admin
     app.post('/api/admin/login', adminController.login);
-        //get admin
-        
+        //get information of admin 
+    app.get('/api/admin/getAdminInfo', passport.authenticate('jwt-admin', {session: false}), adminController.getAdmin);
+        // change admin information: password/name
+    app.put('/api/admin/update', passport.authenticate('jwt-admin', {session: false}), adminController.updateAdminInfo);
 }
 
