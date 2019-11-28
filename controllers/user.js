@@ -109,7 +109,9 @@ const getUserInfo = function(req, res){
 
 const show = function(req, res){
     db.user.findOne({
-        id : req.params.id
+        where : {
+            id : req.params.id
+        }
     }).then(function(user){
         if(!user){
             res.json({

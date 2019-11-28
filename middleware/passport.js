@@ -11,6 +11,7 @@ jwtOptions.secretOrKey = secretOrKey
 
 
 var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next){
+    console.log(jwt_payload)
     db.user.findOne({
         where : {
             id : jwt_payload.id
@@ -38,6 +39,29 @@ var strategy1 = new JwtStrategy(jwtOptions, function(jwt_payload, next){
     })
 });
 
+var strategyAdmin = new JwtStrategy(jwtOptions, function(jwt_payload, next){
+    console.log("passport.js:43: Admin received payload:", jwt_payload)
+    db.admin.findOne({
+        where : {
+            id : jwt_payload.id,
+            name: jwt_payload.name,
+            password: jwt_payload.password
+        }
+    }).then(function(admin){
+        if(admin){
+            return next(null, admin);
+        }else{
+            return next(null, false);
+        }
+    }).catch(function(err){
+        if(err){
+            return next(err, false)
+        }
+    })
+});
+
+passport.use('jwt-admin', strategyAdmin);
 passport.use('jwt-user', strategy);
 passport.use('jwt-shipper', strategy1);
+
 module.exports = passport;
