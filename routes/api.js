@@ -9,7 +9,7 @@ module.exports = (app) => {
         //  get all user for admin
     app.get('/api/user' , user.index);
         // get info user for admin
-    app.get('/api/user/:id', user.show);
+    // app.get('/api/user/:id', user.show);
         // delete account for admin
     app.delete('/api/user/:id', user.destroy);
         // admin sua tai khoan nguoi dung
