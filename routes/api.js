@@ -48,7 +48,7 @@ module.exports = (app) => {
     // admin
         //login for admin
     app.post('/api/admin/login', adminController.login);
-        //get information of admin 
+        //get information of admin
     app.get('/api/admin/getAdminInfo', passport.authenticate('jwt-admin', {session: false}), adminController.getAdmin);
         // change admin information: password/name
     app.put('/api/admin/update', passport.authenticate('jwt-admin', {session: false}), adminController.updateAdminInfo);
