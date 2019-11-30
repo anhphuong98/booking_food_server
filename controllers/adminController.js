@@ -1,9 +1,9 @@
 db = require('../models');
 bcrypt = require('bcrypt-nodejs');
-var secretOrKey = require('../config/secretOrKey');
 jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
 
+const config = require('../config/config.json');
 //login
 const login = (req, res) => {
     console.log("Sign in");
@@ -20,7 +20,7 @@ const login = (req, res) => {
                 status: "Cannot find admin"
             })
         }
-    
+
     //login without default password
         if (admin.password != '123456') {
             var validPassword = bcrypt.compareSync(password, admin.password);
@@ -30,8 +30,8 @@ const login = (req, res) => {
                 token: null,
                 status: "Wrong password"
             })}
-        } 
-        else    //login with default password 
+        }
+        else    //login with default password
         {
             if(password != '123456'){
                 return res.status(400).json({
@@ -44,11 +44,12 @@ const login = (req, res) => {
 
     //successful login
     var payload = {
-        id: admin.id, 
-        name: admin.name, 
-        password: admin.password
+        id: admin.id,
+        email : admin.email,
+        password: admin.password,
+        role : 'admin'
     }
-        var token = jwt.sign(payload,secretOrKey,
+        var token = jwt.sign(payload, config.secret,
             {
                 expiresIn: 86400 //valid in 24hours
             })
@@ -91,7 +92,7 @@ const updateAdminInfo = (req, res) => {
         password: bcrypt.hashSync(req.body.password, salt)
     }, {
         where: {
-            id: req.user.id 
+            id: req.user.id
         }
     }).then(function(admin) {
         res.json({
@@ -99,7 +100,7 @@ const updateAdminInfo = (req, res) => {
             message: "account updated"
         })
     }
-       
+
     )
 }
 

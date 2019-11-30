@@ -1,8 +1,8 @@
 const db = require('../models');
-const secretOrKey = require('../config/secretOrKey');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
 const salt = bcrypt.genSaltSync(10);
+const config = require('../config/config.json');
 
 const index = function(req, res){
     db.shipper.findAll().then(function(data){
@@ -36,8 +36,13 @@ const login = function(req, res){
                 message : "Tài khoản bị khóa"
             })
         }
-        var payload = {id : shipper.id};
-        var token = jwt.sign(payload, secretOrKey, {
+        var payload = {
+            id : shipper.id,
+            email : shipper.email,
+            password : shipper.password,
+            role : 'shipper'
+        };
+        var token = jwt.sign(payload, config.secret, {
             expiresIn : 3600
         });
         res.json({
@@ -77,23 +82,50 @@ const getShipperInfo = function(req, res){
 
 
 const show = function(req, res){
-    db.shipper.findOne({
-        where : {
-            id : req.params.id
-        }
-    }).then(function(shipper){
-         if(!shipper){
+    if(req.user.role === 'admin'){
+        db.shipper.findOne({
+            where : {
+                id : req.params.id
+            }
+        }).then(function(shipper){
+             if(!shipper){
+                res.json({
+                    success : false,
+                    message : "Lay thong tin that bai"
+                });
+            }else{
+                res.json({
+                    success : true,
+                    data : shipper
+                });
+            }
+        });
+    }else{
+        if(req.user.id != req.params.id){
             res.json({
                 success : false,
                 message : "Lay thong tin that bai"
-            });
-        }else{
-            res.json({
-                success : true,
-                data : shipper
             })
         }
-    })
+        db.shipper.findOne({
+            where : {
+                id : req.params.id
+            }
+        }).then(function(shipper){
+             if(!shipper){
+                res.json({
+                    success : false,
+                    message : "Lay thong tin that bai"
+                });
+            }else{
+                res.json({
+                    success : true,
+                    data : shipper
+                });
+            }
+        });
+    }
+
 }
 
 const store = function(req, res){
@@ -130,15 +162,24 @@ const store = function(req, res){
 
 
 const destroy = function(req, res){
-    db.shipper.destroy({
+    db.shipper.findOne({
         where : {
             id : req.params.id
         }
-    }).then(function(){
-        res.json({
-            success : true,
-            message : "Xoa tai khoan thanh cong"
-        })
+    }).then(function(shipper){
+        if(!shipper){
+            res.json({
+                success : false,
+                message : "Tai khoan khong ton tai"
+            });
+        }else{
+            shipper.destroy().then(function(){
+                res.json({
+                    success : true,
+                    message : "Xoa tai khoan thanh cong"
+                })
+            });
+        }
     });
 }
 
@@ -184,13 +225,53 @@ const updateShipperInfo = function(req, res){
         });
     });
 }
+const update = function(req, res){
+    if(req.user.role === 'admin'){
+        db.shipper.update({
+            name : req.body.name,
+            phone : req.body.phone,
+            address : req.body.address,
+            password :  bcrypt.hashSync(req.body.password, salt),
+            url_image : req.body.url_image,
+            status : req.body.status,
+            identification : req.body.identification,
+            license_plates : req.body.license_plates
+        },{
+            where : {
+                id : req.params.id
+            }
+        }).then(shipper => {
+            res.json({
+                success : true,
+                message : "Cap nhat thong tin thanh cong"
+            });
+        });
+    }else{
+        db.shipper.update({
+            name : req.body.name,
+            phone : req.body.phone,
+            address : req.body.address,
+            password :  bcrypt.hashSync(req.body.password, salt),
+            url_image : req.body.url_image,
+            identification : req.body.identification,
+            license_plates : req.body.license_plates
+        },{
+            where : {
+                id : req.user.id
+            }
+        }).then(shipper => {
+            res.json({
+                success : true,
+                message : "Cap nhat thong tin thanh cong"
+            });
+        });
+    }
+}
 var shipper = {}
 shipper.index = index;
 shipper.login = login;
-shipper.getShipperInfo = getShipperInfo;
 shipper.show = show;
 shipper.store = store;
 shipper.destroy = destroy;
-shipper.updateShipperInfo = updateShipperInfo;
-shipper.adminUpdate = adminUpdate;
+shipper.update = update;
 module.exports = shipper;
