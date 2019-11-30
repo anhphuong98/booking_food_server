@@ -10,11 +10,13 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = secretOrKey
 
 
-var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next){
+var strategyUser = new JwtStrategy(jwtOptions, function(jwt_payload, next){
     console.log(jwt_payload)
     db.user.findOne({
         where : {
-            id : jwt_payload.id
+            id : jwt_payload.id,
+            email : jwt_payload.email,
+            password : jwt_payload.password
         }
     }).then(function(user){
         if(user){
@@ -25,10 +27,12 @@ var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next){
     });
 });
 
-var strategy1 = new JwtStrategy(jwtOptions, function(jwt_payload, next){
+var strategyShipper = new JwtStrategy(jwtOptions, function(jwt_payload, next){
     db.shipper.findOne({
         where : {
-            id : jwt_payload.id
+            id : jwt_payload.id,
+            email : jwt_payload.email,
+            password : jwt_payload.password
         }
     }).then(function(shipper){
         if(shipper){
@@ -61,7 +65,7 @@ var strategyAdmin = new JwtStrategy(jwtOptions, function(jwt_payload, next){
 });
 
 passport.use('jwt-admin', strategyAdmin);
-passport.use('jwt-user', strategy);
-passport.use('jwt-shipper', strategy1);
+passport.use('jwt-user', strategyUser);
+passport.use('jwt-shipper', strategyShipper);
 
 module.exports = passport;
