@@ -190,6 +190,13 @@ const update = function(req, res){
         });
     }
 }
+
+const test = function(req, res){
+    res.json({
+        success : true,
+        message : "Deploy heroku successfully!"
+    })
+}
 var user = {}
 user.index = index;
 user.login = login;
@@ -197,5 +204,5 @@ user.register = register;
 user.show = show;
 user.destroy = destroy;
 user.update = update;
-
+user.test = test;
 module.exports = user;
