@@ -41,6 +41,8 @@ module.exports = (app) => {
     app.get('/api/admin/getAdminInfo', authenticate('admin'), adminController.getAdmin);
         // change admin information: password/name
     app.put('/api/admin/update', authenticate('admin'), adminController.updateAdminInfo);
+        // rout test
+    app.get('/api/test', user.test);
 
 
 
