@@ -11,7 +11,7 @@ module.exports = (roles) => {
         (req, res, next) => {
             console.log(req.user);
             if (roles.length && !roles.includes(req.user.role)) {
-                return res.status(401).json({ message: 'Unauthorized' });
+                return res.status(401).json({ message: 'Unauthorized111' });
             }
             if(req.user.role === 'user'){
                  db.user.findOne({
@@ -21,11 +21,12 @@ module.exports = (roles) => {
                         password : req.user.password
                     }
                 }).then(function(user){
+                    console.log("co user");
                     if(user){
                         next();
                     }
                     else{
-                        return res.status(401).json({ message: 'Unauthorized' });
+                        return res.status(401).json({ message: 'Unauthorized222' });
                     }
                 });
             }else if(req.user.role === 'shipper'){
@@ -55,6 +56,20 @@ module.exports = (roles) => {
                         next();
                     }else{
                         return res.status(401).json({ message: 'Unauthorized' });
+                    }
+                });
+            }else if(req.user.role === 'store'){
+                db.store.findOne({
+                    where : {
+                        id : req.user.id,
+                        email : req.user.email,
+                        password : req.user.password
+                    }
+                }).then(function(store){
+                    if(store){
+                        next();
+                    }else{
+                        return res.status(401).json({ message : 'Unauthorized' });
                     }
                 });
             }

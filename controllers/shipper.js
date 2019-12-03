@@ -247,6 +247,21 @@ const update = function(req, res){
             });
         });
     }else{
+        if(req.user.id != req.params.id){
+            res.json({
+                success : false,
+                message : "Cap nhat thong tin that bai"
+            })
+        }
+         if(req.body.password){
+            db.shipper.update({
+                password : bcrypt.hashSync(req.body.password, salt)
+            }, {
+                where : {
+                    id : req.user.id
+                }
+            });
+        }
         db.shipper.update({
             name : req.body.name,
             phone : req.body.phone,
