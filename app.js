@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
  // Khai bao passport va session de luu thong tin nguoi dung
-var passport = require('./middleware/passport');
+// var passport = require('./middleware/passport');
 var session = require('express-session');
 // Goi API
 var api = require('./routes/api');
@@ -32,8 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // use passport va session
 app.use(session({ secret: 'keyboard cat',resave: true, saveUninitialized: true}));
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 
 app.use('/', indexRouter);

@@ -1,9 +1,9 @@
 db = require('../models');
 bcrypt = require('bcrypt-nodejs');
-var secretOrKey = require('../config/secretOrKey');
 jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
 
+const config = require('../config/config.json');
 //login
 const login = (req, res) => {
     console.log("Sign in");
@@ -43,13 +43,14 @@ const login = (req, res) => {
             }
         }
 
-        //successful login
-        var payload = {
-            id: admin.id,
-            name: admin.name,
-            password: admin.password
-        }
-        var token = jwt.sign(payload, secretOrKey,
+    //successful login
+    var payload = {
+        id: admin.id,
+        email : admin.email,
+        password: admin.password,
+        role : 'admin'
+    }
+        var token = jwt.sign(payload, config.secret,
             {
                 expiresIn: 86400 //valid in 24hours
             })
