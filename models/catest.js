@@ -1,8 +1,8 @@
 'use strict'
 
 module.exports = function(sequelize, DataTypes){
-    const Category = sequelize.define(
-        'categories',
+    const Catest = sequelize.define(
+        'catest',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -25,13 +25,16 @@ module.exports = function(sequelize, DataTypes){
             timestamps: false
         }
     );
-    Category.associate = function (models) {
-        Category.hasMany(models.dish, {
-            foreignKey: 'category_id'
-        })
-        Category.belongsTo(models.categories, {
-            foreignKey: 'parent_id'
+    Catest.associate = function (models) {
+
+        Catest.belongsTo(models.catest, {
+            foreignKey: 'parent_id',
+            onDelete: "CASCADE"
+        });
+        Catest.hasMany(models.catest, {
+            foreignKey : 'parent_id',
+            onDelete: "CASCADE"
         })
     }
-    return Category;
+    return Catest;
 }
