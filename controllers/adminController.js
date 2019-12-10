@@ -21,19 +21,20 @@ const login = (req, res) => {
             })
         }
 
-    //login without default password
+        //login without default password
         if (admin.password != '123456') {
             var validPassword = bcrypt.compareSync(password, admin.password);
-            if(!validPassword){
-            return res.status(400).json({
-                success: false,
-                token: null,
-                status: "Wrong password"
-            })}
+            if (!validPassword) {
+                return res.status(400).json({
+                    success: false,
+                    token: null,
+                    status: "Wrong password"
+                })
+            }
         }
-        else    //login with default password
+        else    //login with default password 
         {
-            if(password != '123456'){
+            if (password != '123456') {
                 return res.status(400).json({
                     success: false,
                     token: null,
@@ -54,24 +55,24 @@ const login = (req, res) => {
                 expiresIn: 86400 //valid in 24hours
             })
 
-            res.status(200).json({
-                success: true,
-                token: token,
-            });
-        }).catch(err => {
-            res.status(500).json('Error -> '+ err );
+        res.status(200).json({
+            success: true,
+            token: token,
         });
+    }).catch(err => {
+        res.status(500).json('Error -> ' + err);
+    });
 }
 
 //get admin
-const getAdmin = (req, res)=>{
+const getAdmin = (req, res) => {
     console.log("get Admin");
     db.admin.findOne({
         where: {
             id: req.user.id
         }
-    }).then(function(admin){
-        if(admin){
+    }).then(function (admin) {
+        if (admin) {
             res.json({
                 success: true,
                 data: admin
@@ -87,21 +88,49 @@ const getAdmin = (req, res)=>{
 
 //update information
 const updateAdminInfo = (req, res) => {
-    db.admin.update({
-        name: req.body.name,
-        password: bcrypt.hashSync(req.body.password, salt)
-    }, {
+    db.admin.findOne({
         where: {
             id: req.user.id
         }
-    }).then(function(admin) {
-        res.json({
-            success: true,
-            message: "account updated"
-        })
-    }
+    }).then(function (admin) {
+        var passwordIsValid = false
 
-    )
+        if (admin.password == '123456') {
+            passwordIsValid = req.body.password == '123456' ? true : false
+        } else {
+            passwordIsValid = bcrypt.compareSync(req.body.password, admin.password)
+        }
+        
+        if (!passwordIsValid) {
+            return res.json({
+                success: false,
+                message: 'Password is invalid'
+            })
+        } else {
+            db.admin.update({
+                name: req.body.name,
+                password: bcrypt.hashSync(req.body.newpassword, salt)
+            }, {
+                where: {
+                    id: admin.id
+                }
+            }).then(function(result){
+                if(result){
+                    return res.json({
+                        success: true,
+                        message: "Your account is updated",      
+                        data: admin
+                    })
+                } else {
+                    return res.json({
+                        success: false,
+                        message: "An error has occurred",
+                        data: null
+                    })
+                }
+            })
+        }
+    })
 }
 
 const adminController = {};

@@ -9,6 +9,7 @@ var logger = require('morgan');
 var session = require('express-session');
 // Goi API
 var api = require('./routes/api');
+var caDiApi = require('./routes/categoryDishApi');
 var db = require('./models');
 
 
@@ -42,6 +43,7 @@ app.use('/users', usersRouter);
 
 // Chay api
 api(app);
+caDiApi(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

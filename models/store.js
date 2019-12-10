@@ -41,10 +41,12 @@ module.exports = (sequelize, DataTypes) => {
         timestamps : false
     });
     Store.association = function(models){
-        //
         Store.hasMany(models.comment, {
             foreignKey : 'store_id'
         });
+        Store.hasMany(models.dishes, {
+            foreignKey: 'store_id'
+        })
     }
     return Store;
 }
