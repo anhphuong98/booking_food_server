@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = function(sequelize, DataTypes){
+module.exports = (sequelize, DataTypes) => {
     var Store = sequelize.define('store', {
         id : {
             type : DataTypes.INTEGER,
@@ -40,8 +40,11 @@ module.exports = function(sequelize, DataTypes){
     },{
         timestamps : false
     });
-    Store.association = function(modules){
+    Store.association = function(models){
         //
+        Store.hasMany(models.comment, {
+            foreignKey : 'store_id'
+        });
     }
     return Store;
 }

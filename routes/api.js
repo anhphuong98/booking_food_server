@@ -2,6 +2,7 @@ const user = require('../controllers/user');
 const shipper = require('../controllers/shipper');
 const adminController = require('../controllers/adminController');
 const store = require('../controllers/store');
+const comment = require('../controllers/comment');
 var authenticate = require('../middleware/authenticate');
 
 module.exports = (app) => {
@@ -60,6 +61,16 @@ module.exports = (app) => {
     app.put('/api/store/:id', authenticate(['admin', 'store']), store.update);
 
 
-
+    // Comment
+        // get all comment of a store
+    app.get('/api/allComment/:id', authenticate(['admin', 'store', 'user']), comment.index);
+        // get one comment
+    app.get('/api/comment/:id', authenticate(['admin', 'store', 'user']), comment.show);
+        // add comment
+    app.post('/api/comment', authenticate(['admin', 'store', 'user']), comment.create);
+        // delete comment
+    app.delete('/api/comment/:id', authenticate(['admin', 'user']), comment.destroy);
+        // put comment
+    app.put('/api/comment/:id', authenticate('user'), comment.update);
 }
 
