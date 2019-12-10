@@ -44,9 +44,13 @@ module.exports = (sequelize, DataTypes) => {
         Store.hasMany(models.comment, {
             foreignKey : 'store_id'
         });
+
+        Store.hasMany(models.evaluation, {
+            foreignKey : 'store_id'
+        });
         Store.hasMany(models.dishes, {
             foreignKey: 'store_id'
-        })
+        });
     }
     return Store;
 }

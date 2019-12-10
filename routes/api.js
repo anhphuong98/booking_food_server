@@ -3,6 +3,7 @@ const shipper = require('../controllers/shipper');
 const adminController = require('../controllers/adminController');
 const store = require('../controllers/store');
 const comment = require('../controllers/comment');
+const evaluation = require('../controllers/evaluation');
 var authenticate = require('../middleware/authenticate');
 
 module.exports = (app) => {
@@ -72,5 +73,14 @@ module.exports = (app) => {
     app.delete('/api/comment/:id', authenticate(['admin', 'user']), comment.destroy);
         // put comment
     app.put('/api/comment/:id', authenticate('user'), comment.update);
+
+
+    // Evaluation
+        // Add evaluation
+    app.post('/api/evaluation', authenticate('user'), evaluation.create);
+        // User update evaluation
+    app.put('/api/evaluation/:id', authenticate('user'), evaluation.update);
+        // Get average Evaluation of store'
+    app.get('/api/storeEvaluation/:id', authenticate(['user', 'admin', 'store', 'shipper']), evaluation.getAverageEvaluation);
 }
 
