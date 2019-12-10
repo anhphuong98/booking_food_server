@@ -1,48 +1,40 @@
 const db = require('../models');
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt  = require('bcrypt-nodejs');
 const salt = bcrypt.genSaltSync(10);
-
-var jwt = require('jsonwebtoken');
 var config = require('../config/config.json');
 
-const index = function(req, res){
-    db.user.findAll().then(function(data){
-        res.status(200).json(data);
-    });
-}
-
 const login = function(req, res){
-    db.user.findOne({
+    db.store.findOne({
         where : {
             email : req.body.email
         }
-    }).then(user => {
-        if(!user){
+    }).then(store => {
+        if(!store){
             res.json({
                 success : false,
-                message : "Email không tồn tại"
+                message : "Tai khoan khong ton tai"
             });
         }
-        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        var passwordIsValid = bcrypt.compareSync(req.body.password, store.password);
         if(!passwordIsValid){
             res.json({
                 success : false,
-                message : "Mật khẩu không chính xác"
+                message : "Mat khau khong chinh xac"
             });
         }
-        var accountIsActive = (user.status == 1);
-        if(accountIsActive){
+        var accountActive = (store.status == 1);
+        if(accountActive){
             res.json({
                 success : false,
-                message : "Tài khoản bị khóa"
-            })
+                message : "Tai khoan bi khoa"
+            });
         }
         var payload = {
-            id : user.id,
-            email : user.email,
-            password : user.password,
-            role : 'user'
-        };
+            id : store.id,
+            email : store.email,
+            password : store.password,
+            role : 'store'
+        }
         var token = jwt.sign(payload, config.secret, {
             expiresIn : 3600
         });
@@ -51,27 +43,29 @@ const login = function(req, res){
             token : token
         });
     });
-
 }
 
 const register = function(req, res){
-    db.user.findOne({
+    db.store.findOne({
         where : {
             email : req.body.email
         }
-    }).then(function(user){
-        if(user){
+    }).then(function(store){
+        if(store){
             res.json({
                 success : false,
                 message : "Tai khoan da ton tai"
             });
         }else{
-            db.user.create({
+            db.store.create({
                 name : req.body.name,
                 email : req.body.email,
                 password : bcrypt.hashSync(req.body.password, salt),
                 phone : req.body.phone,
-                address : req.body.address
+                address : req.body.address,
+                url_image : req.body.url_image,
+                open_time : req.body.open_time,
+                close_time : req.body.close_time
             }).then(function(account){
                 res.json({
                     success : true,
@@ -82,16 +76,22 @@ const register = function(req, res){
         }
     });
 }
-// Lay thong tin cua nguoi theo id truyen vao
+
+const index = function(req, res){
+    db.store.findAll().then(function(data){
+        res.status(200).json(data);
+    })
+}
+
 
 const show = function(req, res){
-    if(req.user.role === 'admin'){
-        db.user.findOne({
+     if(req.user.role === 'admin'){
+        db.store.findOne({
             where : {
                 id : req.params.id
             }
-        }).then(function(user){
-            if(!user){
+        }).then(function(store){
+            if(!store){
                 res.json({
                     success : false,
                     message : "Lay thong tin that bai"
@@ -99,7 +99,7 @@ const show = function(req, res){
             }else{
                 res.json({
                     success : true,
-                    data : user
+                    data : store
                 })
             }
         });
@@ -110,12 +110,12 @@ const show = function(req, res){
                 message : "Lay thong tin that bai"
             })
         }
-         db.user.findOne({
+         db.store.findOne({
             where : {
                 id : req.user.id
             }
-        }).then(function(user){
-            if(!user){
+        }).then(function(store){
+            if(!store){
                 res.json({
                     success : false,
                     message : "Lay thong tin that bai"
@@ -123,26 +123,26 @@ const show = function(req, res){
             }else{
                 res.json({
                     success : true,
-                    data : user
-                })
+                    data : store
+                });
             }
         });
     }
 }
 
 const destroy = function(req, res){
-    db.user.findOne({
+    db.store.findOne({
         where : {
             id : req.params.id
         }
-    }).then(function(user){
-        if(!user){
+    }).then(function(store){
+        if(!store){
             res.json({
                 success : false,
                 message : "Tai khoan khong ton tai"
             });
         }else{
-            user.destroy().then(function(){
+            store.destroy().then(function(){
                 res.json({
                     success : true,
                     message : "Xoa tai khoan thanh cong"
@@ -152,14 +152,17 @@ const destroy = function(req, res){
     });
 }
 
+
 const update = function(req, res){
-    if(req.user.role === 'admin'){
-        db.user.update({
+     if(req.user.role === 'admin'){
+        db.store.update({
             name : req.body.name,
             phone : req.body.phone,
             address : req.body.address,
             password :  bcrypt.hashSync(req.body.password, salt),
             url_image : req.body.url_image,
+            close_time : req.body.close_time,
+            open_time : req.body.open_time,
             status : req.body.status
         },{
             where : {
@@ -178,8 +181,8 @@ const update = function(req, res){
                 message : "Cap nhat thong tin that bai"
             })
         }
-         if(req.body.password){
-            db.user.update({
+        if(req.body.password){
+            db.store.update({
                 password : bcrypt.hashSync(req.body.password, salt)
             }, {
                 where : {
@@ -187,16 +190,18 @@ const update = function(req, res){
                 }
             });
         }
-        db.user.update({
+        db.store.update({
             name : req.body.name,
             phone : req.body.phone,
             address : req.body.address,
-            url_image : req.body.url_image
+            url_image : req.body.url_image,
+            close_time : req.body.close_time,
+            open_time : req.body.open_time,
         },{
             where : {
                 id : req.user.id
             }
-        }).then(user => {
+        }).then(store => {
             res.json({
                 success : true,
                 message : "Cap nhat thong tin thanh cong"
@@ -204,19 +209,12 @@ const update = function(req, res){
         });
     }
 }
+var store = {}
+store.login = login;
+store.register = register;
+store.index = index;
+store.show = show;
+store.destroy = destroy;
+store.update = update;
 
-const test = function(req, res){
-    res.json({
-        success : true,
-        message : "Deploy heroku successfully!"
-    })
-}
-var user = {}
-user.index = index;
-user.login = login;
-user.register = register;
-user.show = show;
-user.destroy = destroy;
-user.update = update;
-user.test = test;
-module.exports = user;
+module.exports = store;

@@ -1,6 +1,7 @@
 const user = require('../controllers/user');
 const shipper = require('../controllers/shipper');
 const adminController = require('../controllers/adminController');
+const store = require('../controllers/store');
 var authenticate = require('../middleware/authenticate');
 
 module.exports = (app) => {
@@ -41,7 +42,24 @@ module.exports = (app) => {
     app.get('/api/admin/getAdminInfo', authenticate('admin'), adminController.getAdmin);
         // change admin information: password/name
     app.put('/api/admin/update', authenticate('admin'), adminController.updateAdminInfo);
-        // rout test
+        // route test
     app.get('/api/test', user.test);
+
+    // store
+        // store login
+    app.post('/api/store/login', store.login);
+        // add store for admin
+    app.post('/api/store', authenticate('admin'), store.register);
+        // get all store for admin
+    app.get('/api/store', authenticate('admin'), store.index);
+        // get info store for admin, store
+    app.get('/api/store/:id', authenticate(['admin', 'store']), store.show);
+        // delete store for admin
+    app.delete('/api/store/:id', authenticate('admin'), store.destroy);
+        // update store for store and admin
+    app.put('/api/store/:id', authenticate(['admin', 'store']), store.update);
+
+
+
 }
 

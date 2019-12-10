@@ -9,8 +9,10 @@ module.exports = function(app){
         //create new category
         app.post('/api/category', authenticate('store'), categoryController.createCategory);
         //update category
-        app.put('/api/category/:id', categoryController.updateCategory);
+        app.put('/api/category/:id', authenticate('store'), categoryController.updateCategory);
         //delete category item
-        app.delete('/api/category/:id', categoryController.deleteCategory);
+        app.delete('/api/category/:id', authenticate('store'), categoryController.deleteCategory);
+    
+    //
 
 }
