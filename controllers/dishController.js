@@ -71,12 +71,43 @@ const addNewDish = (req, res)=>{
             })
         })
 }
+//update dish
+const updateDish = (req, res)=>{
+    console.log("update dish");
+    
+    db.dish.update({
+            store_id: req.user.id,
+            name: req.body.name,
+            category_id: req.body.category_id,
+            url_image: req.body.url_image,
+            price: req.body.price,
+            sale: req.body.sale,     
+    }, {
+        where: {
+            id: req.params.id
+        }
+    }).then(function(result){
+        if(result){
+            db.dish.findOne({
+                where: {
+                    id: req.params.id
+                }
+            }).then(resu=>{
+                res.json({
+                    success: true,
+                    dish: resu
+                })
+            })
+        }  
+    })
+}
 
 
 const dishController = {};
 dishController.getAllDish = getAllDish;
 dishController.getDishwithId = getDishwithId;
 dishController.getDishofStore = getDishofStore;
-dishController.addNewDish = addNewDish
+dishController.addNewDish = addNewDish;
+dishController.updateDish = updateDish
 
 module.exports = dishController;

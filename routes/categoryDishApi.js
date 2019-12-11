@@ -23,8 +23,10 @@ module.exports = function(app){
         //get all dishes of a store has id
         app.get('/api/getStoreDish/:id', dishController.getDishofStore);
         //add new dish
-        app.post('/api/dish/:id', authenticate('store'), dishController.addNewDish)
-
-    // 
+        app.post('/api/dish/:id', authenticate('store'), dishController.addNewDish);
+        //update dish
+        app.put('/api/dish/:id', authenticate(['store', 'admin']), dishController.updateDish)
+        //delete dish
+        
     app.delete('/api/catest/:id', catest.deleteCatest);
 }
