@@ -40,7 +40,6 @@ const login = function(req, res){
         var payload = {
             id : user.id,
             email : user.email,
-            password : user.password,
             role : 'user'
         };
         var token = jwt.sign(payload, config.secret, {
@@ -48,7 +47,13 @@ const login = function(req, res){
         });
         res.json({
             success : true,
-            token : token
+            token : token,
+            data : {
+                id : user.id,
+                email : user.email,
+                name : user.name,
+                url_image : user.url_image
+            }
         });
     });
 
