@@ -82,5 +82,8 @@ module.exports = (app) => {
     app.put('/api/evaluation/:id', authenticate('user'), evaluation.update);
         // Get average Evaluation of store'
     app.get('/api/storeEvaluation/:id', authenticate(['user', 'admin', 'store', 'shipper']), evaluation.getAverageEvaluation);
+
+
+
 }
 

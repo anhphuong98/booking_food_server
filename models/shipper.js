@@ -40,6 +40,10 @@ module.exports = (sequelize, Datatypes) => {
         status : {
             type : Datatypes.BOOLEAN,
             defaultValue : 0
+        },
+        isOnline : {
+            type : Datatypes.BOOLEAN,
+            defaultValue : 0
         }
     }, {
         timestamps : false
