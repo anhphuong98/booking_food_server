@@ -43,6 +43,9 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.order, {
             foreignKey: 'user_id'
         })
+        User.hasMany(models.evaluation, {
+            foreignKey : 'user_id'
+        });
     }
     return User;
 }
