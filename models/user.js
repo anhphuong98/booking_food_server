@@ -40,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey : 'user_id'
             // as : 'comments'
         });
+        User.hasMany(models.order, {
+            foreignKey: 'user_id'
+        })
     }
     return User;
 }
