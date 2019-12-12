@@ -18,7 +18,6 @@ module.exports = (roles) => {
                     where : {
                         id : req.user.id,
                         email : req.user.email,
-                        password : req.user.password
                     }
                 }).then(function(user){
                     console.log("co user");
@@ -34,7 +33,6 @@ module.exports = (roles) => {
                     where : {
                         id : req.user.id,
                         email : req.user.email,
-                        password : req.user.password
                     }
                 }).then(function(shipper){
                     if(shipper){
@@ -49,7 +47,6 @@ module.exports = (roles) => {
                     where : {
                         id : req.user.id,
                         email : req.user.email,
-                        password : req.user.password
                     }
                 }).then(function(admin){
                     if(admin){
@@ -63,7 +60,6 @@ module.exports = (roles) => {
                     where : {
                         id : req.user.id,
                         email : req.user.email,
-                        password : req.user.password
                     }
                 }).then(function(store){
                     if(store){
