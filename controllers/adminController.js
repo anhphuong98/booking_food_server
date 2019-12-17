@@ -32,7 +32,7 @@ const login = (req, res) => {
                 })
             }
         }
-        else    //login with default password 
+        else    //login with default password
         {
             if (password != '123456') {
                 return res.status(400).json({
@@ -47,7 +47,6 @@ const login = (req, res) => {
     var payload = {
         id: admin.id,
         email : admin.email,
-        password: admin.password,
         role : 'admin'
     }
         var token = jwt.sign(payload, config.secret,
@@ -58,6 +57,11 @@ const login = (req, res) => {
         res.status(200).json({
             success: true,
             token: token,
+              data : {
+                id : admin.id,
+                email : admin.email,
+                name : admin.name,
+            }
         });
     }).catch(err => {
         res.status(500).json('Error -> ' + err);
@@ -100,7 +104,7 @@ const updateAdminInfo = (req, res) => {
         } else {
             passwordIsValid = bcrypt.compareSync(req.body.password, admin.password)
         }
-        
+
         if (!passwordIsValid) {
             return res.json({
                 success: false,
@@ -118,7 +122,7 @@ const updateAdminInfo = (req, res) => {
                 if(result){
                     return res.json({
                         success: true,
-                        message: "Your account is updated",      
+                        message: "Your account is updated",
                         data: admin
                     })
                 } else {
