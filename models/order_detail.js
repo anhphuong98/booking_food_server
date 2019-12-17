@@ -18,12 +18,16 @@ module.exports = (sequelize, DataTypes) => {
         quantity: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        current_price: {
+            type: DataTypes.FLOAT,
+            allowNull: true
         }
     }, {
         timestamps: false
     });
     OrderDetail.associate = (models)=>{
-        OrderDetail.hasMany(models.dish, {
+        OrderDetail.belongsTo(models.dish, {
             foreignKey: 'dish_id'
         })
         OrderDetail.belongsTo(models.order, {

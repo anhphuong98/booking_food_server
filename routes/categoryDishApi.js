@@ -1,5 +1,6 @@
 const categoryController = require("../controllers/categoryController");
 const dishController = require("../controllers/dishController");
+const orderController = require("../controllers/orderController")
 const catest = require("../controllers/catest");
 passport = require('passport');
 const authenticate = require('../middleware/authenticate')
@@ -28,5 +29,7 @@ module.exports = function(app){
         app.put('/api/dish/:id', authenticate(['store', 'admin']), dishController.updateDish)
         //delete dish
         
+    //ORDERS
+        app.get('/api/order', authenticate('admin'), orderController.getAllOrder)
     app.delete('/api/catest/:id', catest.deleteCatest);
 }
