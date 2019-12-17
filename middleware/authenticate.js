@@ -9,7 +9,7 @@ module.exports = (roles) => {
     return [
         expressJwt({secret}),
         (req, res, next) => {
-            console.log(req.user);
+            //console.log(req.user);
             if (roles.length && !roles.includes(req.user.role)) {
                 return res.status(401).json({ message: 'Unauthorized111' });
             }

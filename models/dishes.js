@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes)=>{
         Dish.belongsTo(models.categories, {
             foreignKey: 'category_id'
         })
+        Dish.hasMany(models.order_detail, {
+            foreignKey: 'dish_id'
+        })
     }
     return Dish;
 }

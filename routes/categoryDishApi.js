@@ -1,5 +1,6 @@
 const categoryController = require("../controllers/categoryController");
 const dishController = require("../controllers/dishController");
+const orderController = require("../controllers/orderController")
 const catest = require("../controllers/catest");
 passport = require('passport');
 const authenticate = require('../middleware/authenticate')
@@ -23,8 +24,12 @@ module.exports = function(app){
         //get all dishes of a store has id
         app.get('/api/getStoreDish/:id', dishController.getDishofStore);
         //add new dish
-        app.post('/api/dish/:id', authenticate('store'), dishController.addNewDish)
-
-    // 
+        app.post('/api/dish/:id', authenticate('store'), dishController.addNewDish);
+        //update dish
+        app.put('/api/dish/:id', authenticate(['store', 'admin']), dishController.updateDish)
+        //delete dish
+        
+    //ORDERS
+        app.get('/api/order', authenticate('admin'), orderController.getAllOrder)
     app.delete('/api/catest/:id', catest.deleteCatest);
 }
