@@ -70,9 +70,6 @@ db.sequelize.sync().then(function(){
     })
 })
 
-  // "username": "myadmin@mybookingserver",
-    // "password": "@Pjtjamj9815101998",
-    // "database": "ptpmcn_booking",
-    // "host": "mybookingserver.mysql.database.azure.com",
+
 
 module.exports = app;
