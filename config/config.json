@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "myadmin@mybookingserver",
-    "password": "@Pjtjamj9815101998",
+    "username": "root",
+    "password": "1",
     "database": "ptpmcn_booking",
-    "host": "mybookingserver.mysql.database.azure.com",
+    "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false
   },

@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         current_price: {
             type: DataTypes.FLOAT,
-            allowNull: true
+            allowNull: false
         }
     }, {
         timestamps: false
