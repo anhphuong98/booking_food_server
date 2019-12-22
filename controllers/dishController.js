@@ -9,7 +9,7 @@ const getAllDish = (req, res) => {
     const limit = pageSize ? pageSize : 20
     const offset = page ? page * limit : 0
     db.dish.findAndCountAll({ limit: limit, offset: offset }).then(function (data) {
-        data.page = pageSize ? pageSize : 0
+        data.page = page? page : 0
         data.pageSize = limit
         res.status(200).json({
             success: true,
@@ -40,21 +40,32 @@ const getDishwithId = (req, res) => {
 }
 //get dish with store id
 const getDishofStore = (req, res) => {
+    const page = Number(req.query.page)
+    const pageSize = Number(req.query.pageSize)
+
+    const limit = pageSize ? pageSize : 20
+    const offset = page ? page * limit : 0
     console.log("get all dishes of a store");
-    db.dish.findAll({
+    db.dish.findAndCountAll(
+        {
         where: {
             store_id: req.params.id
-        }
+        },
+        offset: offset,
+        limit: limit
     }).then(function (data) {
-        if (data.length) {
+        data.page = page ? page : 0;
+        data.pageSize = limit;
+        if (data.count) {
             res.status(200).json({
                 success: true,
                 dishes: data
             })
-        } else if (!data.length) {
+        } else if (!data.count) {
             res.status(500).json({
                 success: false,
-                message: "Invalid store id"
+                message: "Invalid store id",
+                dishes: data
             })
         }
     })
