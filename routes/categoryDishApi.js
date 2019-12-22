@@ -28,10 +28,13 @@ module.exports = function (app) {
     //update dish
     app.put('/api/dish/:id', authenticate(['store', 'admin']), dishController.updateDish)
     //delete dish
-
+    app.delete('/api/dish/:id', authenticate(['store', "admin"]), dishController.deleteDish);
+    
     //ORDERS
     //admin gets all order existed
         app.get('/api/order', authenticate('admin'), orderController.getAllOrder);
+        //get order of a shipper by his id
         app.get('/api/order/shipper/:id', authenticate(['shipper', 'admin']), orderController.getOrderShipper);
+        //get order detail by order id
         app.get('/api/orderDetail/:id', authenticate(['admin', 'shipper', 'user', 'store']), orderController.getDetailbyOrderId)
 }

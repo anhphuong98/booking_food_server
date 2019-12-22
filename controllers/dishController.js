@@ -118,6 +118,30 @@ const updateDish = (req, res) => {
         }
     })
 }
+//delete dish
+const deleteDish = (req, res)=>{
+    console.log("delete dish");
+    db.dish.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(function(dish) {
+        if(!dish){
+            res.json({
+                success: false,
+                message: "khong ton tai mon an"
+            })
+        } else {
+            dish.destroy().then(function(result){
+                res.json({
+                    success: true,
+                    message: "xoa mon an thanh cong"
+                })
+            })
+        }
+        
+    })
+}
 
 
 const dishController = {};
@@ -125,6 +149,7 @@ dishController.getAllDish = getAllDish;
 dishController.getDishwithId = getDishwithId;
 dishController.getDishofStore = getDishofStore;
 dishController.addNewDish = addNewDish;
-dishController.updateDish = updateDish
+dishController.updateDish = updateDish;
+dishController.deleteDish = deleteDish
 
 module.exports = dishController;
