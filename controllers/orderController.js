@@ -2,7 +2,14 @@ db = require('../models');
 
 //get all order 
 const getAllOrder = (req, res) => {
-    db.order.findAll().then(function (result) {
+     const page = Number(req.query.page);
+     const pageSize = Number(req.query.pageSize);
+
+     const limit = pageSize? pageSize : 20;
+     const offset = page? page*limit : 0
+    db.order.findAndCountAll({limit: limit, offset: offset}).then(function (result) {
+        result.page = page? page: 0;
+        result.pageSize = pageSize? pageSize : 20
         res.status(200).json({
             success: true,
             data: result
@@ -13,23 +20,15 @@ const getAllOrder = (req, res) => {
 const getOrderShipper = (req, res) => {
     db.order.findAll({
         where: {
-            shipper_id: req.user.id
+            shipper_id: req.params.id
         }
-    }).then(function (result) {
-        if (req.user.id == req.params.id) {
-            
+    }).then(function (result) { 
             if (result) {
                 res.status(200).json({
                     success: true,
                     data: result
                 })
-            }
-        } else {
-            res.status(500).json({
-                success: false,
-                message: "cannot get order by admin id"
-            })
-        }
+            }     
     })
 }
 const getOrderShipperTest = (req, res) => {

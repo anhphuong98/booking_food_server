@@ -24,12 +24,13 @@ module.exports = function (app) {
     //get all dishes of a store has id
     app.get('/api/getStoreDish/:id', dishController.getDishofStore);
     //add new dish
-    app.post('/api/dish', authenticate('store'), dishController.addNewDish);
+    app.post('/api/dish', authenticate(['store', 'admin']), dishController.addNewDish);
     //update dish
     app.put('/api/dish/:id', authenticate(['store', 'admin']), dishController.updateDish)
     //delete dish
 
     //ORDERS
+    //admin gets all order existed
         app.get('/api/order', authenticate('admin'), orderController.getAllOrder);
         app.get('/api/order/shipper/:id', authenticate(['shipper', 'admin']), orderController.getOrderShipper);
         app.get('/api/orderDetail/:id', authenticate(['admin', 'shipper', 'user', 'store']), orderController.getDetailbyOrderId)
