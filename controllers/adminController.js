@@ -31,8 +31,7 @@ const login = (req, res) => {
                     status: "Wrong password"
                 })
             }
-        }
-        else    //login with default password
+        } else //login with default password
         {
             if (password != '123456') {
                 return res.status(400).json({
@@ -43,24 +42,23 @@ const login = (req, res) => {
             }
         }
 
-    //successful login
-    var payload = {
-        id: admin.id,
-        email : admin.email,
-        role : 'admin'
-    }
-        var token = jwt.sign(payload, config.secret,
-            {
-                expiresIn: 86400 //valid in 24hours
-            })
+        //successful login
+        var payload = {
+            id: admin.id,
+            email: admin.email,
+            role: 'admin'
+        }
+        var token = jwt.sign(payload, config.secret, {
+            expiresIn: 86400 //valid in 24hours
+        })
 
         res.status(200).json({
             success: true,
             token: token,
-              data : {
-                id : admin.id,
-                email : admin.email,
-                name : admin.name,
+            data: {
+                id: admin.id,
+                email: admin.email,
+                name: admin.name,
             }
         });
     }).catch(err => {
@@ -118,8 +116,8 @@ const updateAdminInfo = (req, res) => {
                 where: {
                     id: admin.id
                 }
-            }).then(function(result){
-                if(result){
+            }).then(function (result) {
+                if (result) {
                     return res.json({
                         success: true,
                         message: "Your account is updated",
