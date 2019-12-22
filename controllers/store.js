@@ -83,7 +83,14 @@ const register = function(req, res){
 }
 
 const index = function(req, res){
-    db.store.findAll().then(function(data){
+    const page = Number(req.query.page);
+    const pageSize = Number(req.query.pageSize);
+
+    const limit = pageSize ? pageSize : 20;
+    const offset = page ? page*limit : 0;
+    db.store.findAndCountAll({limit: limit, offset: offset}).then(function(data){
+        data.page = page ? page : 0;
+        data.pageSize = limit;
         res.status(200).json(data);
     })
 }

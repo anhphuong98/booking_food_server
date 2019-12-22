@@ -54,7 +54,7 @@ module.exports = (app) => {
     // add store for admin
     app.post('/api/store', authenticate('admin'), store.register);
     // get all store for admin
-    app.get('/api/store', authenticate('admin'), store.index);
+    app.get('/api/store', store.index);
     // get info store for admin, store
     app.get('/api/store/:id', authenticate(['admin', 'store']), store.show);
     // delete store for admin

@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
         Order.hasMany(models.order_detail, {
             foreignKey: 'order_id'
         })
+        Order.belongsTo(models.store, {
+            foreignKey: 'store_id'
+        })
     }
     return Order;
 }

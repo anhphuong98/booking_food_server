@@ -51,6 +51,9 @@ module.exports = (sequelize, DataTypes) => {
         Store.hasMany(models.dishes, {
             foreignKey: 'store_id'
         });
+        Store.hasMany(models.order, {
+            foreignKey: 'store_id'
+        })
     }
     return Store;
 }
