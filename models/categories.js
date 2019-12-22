@@ -16,9 +16,6 @@ module.exports = function(sequelize, DataTypes){
             status: {
                 type: DataTypes.INTEGER,
                 allowNull: false
-            },
-            parent_id: {
-                type: DataTypes.INTEGER,
             }
         },
         {
@@ -28,9 +25,6 @@ module.exports = function(sequelize, DataTypes){
     Category.associate = function (models) {
         Category.hasMany(models.dish, {
             foreignKey: 'category_id'
-        })
-        Category.belongsTo(models.categories, {
-            foreignKey: 'parent_id'
         })
     }
     return Category;
