@@ -83,7 +83,7 @@ const deleteCategory = (req, res) => {
 
     db.categories.destroy({
         where: {
-            parent_id: req.params.id
+            id: req.params.id
         }
     }).then(function () {
         res.json({

@@ -28,7 +28,8 @@ module.exports = function (app) {
     //update dish
     app.put('/api/dish/:id', authenticate(['store', 'admin']), dishController.updateDish)
     //delete dish
-
+    app.delete('/api/dish/:id', authenticate(['store', "admin"]), dishController.deleteDish);
+    
     //ORDERS
     //admin gets all order existed
         app.get('/api/order', authenticate('admin'), orderController.getAllOrder);
