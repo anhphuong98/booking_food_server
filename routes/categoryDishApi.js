@@ -10,7 +10,7 @@ module.exports = function(app){
         //get category
         app.get('/api/category', categoryController.getCategory);
         //create new category
-        app.post('/api/category', authenticate('store'), categoryController.createCategory);
+        app.post('/api/category', authenticate(['store', 'admin']), categoryController.createCategory);
         //update category
         app.put('/api/category/:id', authenticate('store'), categoryController.updateCategory);
         //delete category item
