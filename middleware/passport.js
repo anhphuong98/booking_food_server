@@ -44,7 +44,7 @@ var strategyShipper = new JwtStrategy(jwtOptions, function(jwt_payload, next){
 });
 
 var strategyAdmin = new JwtStrategy(jwtOptions, function(jwt_payload, next){
-    console.log("passport.js:43: Admin received payload:", jwt_payload)
+    console.log("passport.js:47: Admin received payload:", jwt_payload)
     db.admin.findOne({
         where : {
             id : jwt_payload.id,
