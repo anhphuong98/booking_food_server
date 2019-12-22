@@ -4,7 +4,14 @@ Sequelize = require('sequelize')
 //get category
 const getCategory = (req, res) => {
     console.log("getting category");
-    db.categories.findAll().then(function (data) {
+    const page = Number(req.query.page);
+    const pageSize = Number(req.query.pageSize);
+
+    const limit = pageSize ? pageSize : 20;
+    const offset = page ? page * limit : 0;
+    db.categories.findAndCountAll({limit: limit, offset: offset}).then(function (data) {
+        data.page = page ? page : 0;
+        data.pageSize = limit;
         res.status(200).json({
             success: true,
             category: data
@@ -14,33 +21,11 @@ const getCategory = (req, res) => {
 //create category
 const createCategory = async function (req, res) {
     console.log("create category");
-    if (!req.body.parent_id);
-    else {
-        try {
-            const parent = await db.categories.findOne({
-                where: {
-                    id: req.body.parent_id
-                }
-            })
-
-            if (!parent) {
-                res.status(401).json({
-                    success: false,
-                    message: "parent category is not existed"
-                })
-                return;
-            }
-        } catch (err) {
-            console.log("createCategory-checkParent", err);
-            return;
-        }
-    }
 
     try {
         const category = await db.categories.create({
             name: req.body.name,
             status: req.body.status,
-            parent_id: req.body.parent_id,
         })
 
         if (!category) {
@@ -62,8 +47,7 @@ const updateCategory = (req, res) => {
     console.log("update category");
     db.categories.update({
         name: req.body.name,
-        status: req.body.status,
-        parent_id: req.body.parent_id
+        status: req.body.status
     }, {
         where: {
             id: req.params.id
