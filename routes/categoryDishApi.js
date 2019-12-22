@@ -30,6 +30,7 @@ module.exports = function (app) {
     //delete dish
 
     //ORDERS
-    app.get('/api/order', authenticate('admin'), orderController.getAllOrder)
-    app.delete('/api/catest/:id', catest.deleteCatest);
+        app.get('/api/order', authenticate('admin'), orderController.getAllOrder);
+        app.get('/api/order/shipper/:id', authenticate(['shipper', 'admin']), orderController.getOrderShipper);
+        app.get('/api/orderDetail/:id', authenticate(['admin', 'shipper', 'user', 'store']), orderController.getDetailbyOrderId)
 }
