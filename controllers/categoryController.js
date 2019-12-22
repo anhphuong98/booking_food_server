@@ -2,9 +2,9 @@ db = require("../models");
 bcrypt = require("bcrypt-nodejs");
 Sequelize = require('sequelize')
 //get category
-const getCategory = (req, res)=>{
+const getCategory = (req, res) => {
     console.log("getting category");
-    db.categories.findAll().then(function(data){
+    db.categories.findAll().then(function (data) {
         res.status(200).json({
             success: true,
             category: data
@@ -12,41 +12,59 @@ const getCategory = (req, res)=>{
     })
 }
 //create category
-const createCategory = (req, res) => {
+const createCategory = async function (req, res) {
     console.log("create category");
-    db.categories.findOne({
-        where: {
-            id: req.body.parent_id
+    if (!req.body.parent_id);
+    else {
+        try {
+            const parent = await db.categories.findOne({
+                where: {
+                    id: req.body.parent_id
+                }
+            })
+
+            if (!parent) {
+                res.status(401).json({
+                    success: false,
+                    message: "parent category is not existed"
+                })
+                return;
+            }
+        } catch (err) {
+            console.log("createCategory-checkParent", err);
+            return;
         }
-    }).then(function(cate) {
-        if(!cate){
-            res.json({
+    }
+
+    try {
+        const category = await db.categories.create({
+            name: req.body.name,
+            status: req.body.status,
+            parent_id: req.body.parent_id,
+        })
+
+        if (!category) {
+            res.status(402).json({
                 success: false,
-                message: "parent category is not existed"
+                message: "category is null"
             })
         } else {
-            db.categories.create({
-                name: req.body.name,
-                status: req.body.status,
-                parent_id: req.body.parent_id,
-            }).then(function(category) {
-                res.json({
-                    success: true,
-                    message: "created a new category",
-                    data: category
-                })
-            })
+            res.json(category)
         }
-    })
+    } catch (err) {
+        console.log("createCategory-createNew", err)
+    }
 }
+
+
 //update category
-const updateCategory = (req, res)=>{
+const updateCategory = (req, res) => {
     console.log("update category");
     db.categories.update({
         name: req.body.name,
         status: req.body.status,
         parent_id: req.body.parent_id
-    },{
+    }, {
         where: {
             id: req.params.id
         }
@@ -65,9 +83,9 @@ const deleteCategory = (req, res) => {
 
     db.categories.destroy({
         where: {
-          parent_id: req.params.id
+            parent_id: req.params.id
         }
-    }).then(function(){
+    }).then(function () {
         res.json({
             success: true,
             message: "Da xoa thanh cong",
@@ -82,4 +100,4 @@ category.createCategory = createCategory;
 category.updateCategory = updateCategory;
 category.deleteCategory = deleteCategory;
 
-module.exports = category;
+module.exports = category
