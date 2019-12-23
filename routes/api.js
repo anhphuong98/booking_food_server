@@ -1,10 +1,10 @@
 const user = require('../controllers/user');
 const shipper = require('../controllers/shipper');
 const adminController = require('../controllers/adminController');
-const disController = require("../controllers/dishController");
 const store = require('../controllers/store');
 const comment = require('../controllers/comment');
 const evaluation = require('../controllers/evaluation');
+const catest = require('../controllers/catest')
 var authenticate = require('../middleware/authenticate');
 
 module.exports = (app) => {
@@ -83,5 +83,4 @@ module.exports = (app) => {
     app.put('/api/evaluation/:id', authenticate('user'), evaluation.update);
     // Get average Evaluation of store'
     app.get('/api/storeEvaluation/:id', authenticate(['user', 'admin', 'store', 'shipper']), evaluation.getAverageEvaluation);
-
 }
