@@ -4,7 +4,6 @@ const adminController = require('../controllers/adminController');
 const store = require('../controllers/store');
 const comment = require('../controllers/comment');
 const evaluation = require('../controllers/evaluation');
-const catest = require('../controllers/catest')
 var authenticate = require('../middleware/authenticate');
 
 module.exports = (app) => {
