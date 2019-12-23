@@ -26,6 +26,7 @@ const createCategory = async function (req, res) {
         const category = await db.categories.create({
             name: req.body.name,
             status: req.body.status,
+            store_id : req.body.store_id
         })
 
         if (!category) {
