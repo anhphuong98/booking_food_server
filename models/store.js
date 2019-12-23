@@ -48,11 +48,14 @@ module.exports = (sequelize, DataTypes) => {
         Store.hasMany(models.evaluation, {
             foreignKey : 'store_id'
         });
-        Store.hasMany(models.dishes, {
+        Store.hasMany(models.dish, {
             foreignKey: 'store_id'
         });
         Store.hasMany(models.order, {
             foreignKey: 'store_id'
+        });
+        Store.hasMany(models.category, {
+            foreignKey : 'store_id'
         })
     }
     return Store;
