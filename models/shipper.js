@@ -48,7 +48,7 @@ module.exports = (sequelize, Datatypes) => {
     }, {
         timestamps : false
     });
-    Shipper.association = function(models){
+    Shipper.associate = function(models){
         Shipper.hasMany(models.order, {
             foreignKey: 'shipper_id'
         })

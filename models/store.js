@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     },{
         timestamps : false
     });
-    Store.association = function(models){
+    Store.associate = function(models){
         Store.hasMany(models.comment, {
             foreignKey : 'store_id'
         });
@@ -57,6 +57,10 @@ module.exports = (sequelize, DataTypes) => {
         Store.hasMany(models.categories, {
             foreignKey : 'store_id'
         })
+        Store.belongsToMany(models.categories, {
+            through : models.dish,
+            foreignKey : 'store_id'
+        });
     }
     return Store;
 }
