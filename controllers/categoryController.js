@@ -9,7 +9,12 @@ const getCategory = (req, res) => {
 
     const limit = pageSize ? pageSize : 20;
     const offset = page ? page * limit : 0;
-    db.categories.findAndCountAll({limit: limit, offset: offset}).then(function (data) {
+    db.categories.findAndCountAll({
+        where: {
+            status: 1
+        },
+        limit: limit, 
+        offset: offset}).then(function (data) {
         data.page = page ? page : 0;
         data.pageSize = limit;
         res.status(200).json({
@@ -46,6 +51,7 @@ const createCategory = async function (req, res) {
 //update category
 const updateCategory = (req, res) => {
     console.log("update category");
+    if(req.user.role == 'admin'){
     db.categories.update({
         name: req.body.name,
         status: req.body.status
@@ -59,7 +65,37 @@ const updateCategory = (req, res) => {
             message: "Updated category",
             data: result
         })
-    })
+    })}
+    if(req.user.role == 'store'){  
+        db.categories.update({
+            name: req.body.name
+        }, {
+            where: {
+                id: req.params.id,
+                store_id: req.user.id,
+                status: 0
+            }
+        }).then(result => {
+            if(result!=0) {
+                db.categories.findOne({
+                    where: {
+                        id: req.params.id
+                    }
+                }).then(category=>{
+                    res.json({
+                        success: true,
+                        message: "Updated category",
+                        data: category
+                    })
+                })}
+            else {
+                res.json({
+                    success: false,
+                    message: "cannot update category"
+                })
+            }
+        })
+    }
 }
 
 //delete category
