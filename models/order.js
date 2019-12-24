@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE
         },
         status: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         },
         shipper_id: {
             type: DataTypes.INTEGER
