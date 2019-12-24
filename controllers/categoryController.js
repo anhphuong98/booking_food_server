@@ -124,14 +124,11 @@ const getCategoryByStoreId = (req, res) => {
     const offset = page? page*limit : 0
     db.categories.findAndCountAll({
         attributes : ['id', 'name', 'status'],
-        include : [{
-            model : db.store,
-            attributes : ['name'],
+        include : [ {
+            model : db.dish,
             where : {
-                id : req.params.id
+                store_id : req.params.id
             }
-        }, {
-            model : db.dish
         }],
         limit: limit,
         offset: offset,
