@@ -162,10 +162,7 @@ const orderController = {};
 orderController.getAllOrder = getAllOrder
 orderController.getOrderShipper = getOrderShipper;
 orderController.getDetailbyOrderId = getDetailbyOrderId;
-<<<<<<< HEAD
 orderController.getOrderByStoreId = getOrderByStoreId;
-=======
 orderController.order = order;
->>>>>>> 3c0da47612a429a353460a031195b357d306ca57
 
 module.exports = orderController;
