@@ -55,12 +55,8 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'store_id'
         });
         Store.hasMany(models.categories, {
-            foreignKey : 'store_id'
+            foreignKey : 'store_id',
         })
-        Store.belongsToMany(models.categories, {
-            through : models.dish,
-            foreignKey : 'store_id'
-        });
     }
     return Store;
 }
