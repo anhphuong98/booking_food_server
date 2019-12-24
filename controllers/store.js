@@ -97,49 +97,32 @@ const index = function(req, res){
 
 
 const show = function(req, res){
-     if(req.user.role === 'admin'){
-        db.store.findOne({
-            where : {
-                id : req.params.id
-            }
-        }).then(function(store){
-            if(!store){
-                res.json({
-                    success : false,
-                    message : "Lay thong tin that bai"
-                });
-            }else{
-                res.json({
-                    success : true,
-                    data : store
-                })
-            }
-        });
-    }else{
-        if(req.user.id != req.params.id){
+    db.store.findOne({
+        where : {
+            id : req.params.id
+        }
+    }).then(function(store){
+        if(!store){
             res.json({
                 success : false,
                 message : "Lay thong tin that bai"
+            });
+        }else{
+            res.json({
+                success : true,
+                data : {
+                    id: store.id,
+                    email: store.email, 
+                    name: store.name,
+                    phone: store.phone, 
+                    address: store.address,
+                    url_image: store.url_image,
+                    open_time: store.open_time, 
+                    close_time: store.close_time
+                }
             })
         }
-         db.store.findOne({
-            where : {
-                id : req.user.id
-            }
-        }).then(function(store){
-            if(!store){
-                res.json({
-                    success : false,
-                    message : "Lay thong tin that bai"
-                });
-            }else{
-                res.json({
-                    success : true,
-                    data : store
-                });
-            }
-        });
-    }
+    });
 }
 
 const destroy = function(req, res){
