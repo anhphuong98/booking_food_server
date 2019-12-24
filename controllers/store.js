@@ -88,7 +88,11 @@ const index = function(req, res){
 
     const limit = pageSize ? pageSize : 20;
     const offset = page ? page*limit : 0;
-    db.store.findAndCountAll({limit: limit, offset: offset}).then(function(data){
+    db.store.findAndCountAll({
+        limit: limit, 
+        offset: offset,
+        attributes : ['id', 'email', 'name', 'phone', 'address', 'url_image', 'open_time', 'close_time']
+    }).then(function(data){
         data.page = page ? page : 0;
         data.pageSize = limit;
         res.status(200).json(data);
@@ -100,7 +104,8 @@ const show = function(req, res){
     db.store.findOne({
         where : {
             id : req.params.id
-        }
+        },
+        attributes : ['id', 'email', 'name', 'phone', 'address', 'url_image', 'open_time', 'close_time']
     }).then(function(store){
         if(!store){
             res.json({
@@ -110,16 +115,7 @@ const show = function(req, res){
         }else{
             res.json({
                 success : true,
-                data : {
-                    id: store.id,
-                    email: store.email, 
-                    name: store.name,
-                    phone: store.phone, 
-                    address: store.address,
-                    url_image: store.url_image,
-                    open_time: store.open_time, 
-                    close_time: store.close_time
-                }
+                data : store
             })
         }
     });
