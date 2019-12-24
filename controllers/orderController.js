@@ -2,19 +2,43 @@ db = require('../models');
 
 //get all order 
 const getAllOrder = (req, res) => {
-    const page = Number(req.query.page);
-    const pageSize = Number(req.query.pageSize);
-
-    const limit = pageSize ? pageSize : 20;
-    const offset = page ? page * limit : 0
-    db.order.findAndCountAll({ limit: limit, offset: offset }).then(function (result) {
-        result.page = page ? page : 0;
-        result.pageSize = pageSize ? pageSize : 20
-        res.status(200).json({
-            success: true,
-            data: result
+   
+    if (req.user.role == 'admin') {
+        const page = Number(req.query.page);
+        const pageSize = Number(req.query.pageSize);
+    
+        const limit = pageSize ? pageSize : 20;
+        const offset = page ? page * limit : 0;
+        db.order.findAndCountAll({ limit: limit, offset: offset }).then(function (result) {
+            result.page = page ? page : 0;
+            result.pageSize = pageSize ? pageSize : 20
+            res.status(200).json({
+                success: true,
+                data: result
+            })
         })
-    })
+    }
+    if (req.user.role == 'user') {
+        const page = Number(req.query.page);
+        const pageSize = Number(req.query.pageSize);
+    
+        const limit = pageSize ? pageSize : 20;
+        const offset = page ? page * limit : 0;
+        db.order.findAndCountAll({
+            where: {
+                user_id: req.user.id
+            }, 
+            limit: limit,
+            offset: offset
+        }).then(function (order) {
+            order.page = page ? page : 0;
+            order.pageSize = pageSize ? pageSize : 20
+            res.json({
+                success: true,
+                data: order
+            })
+        })
+    }
 }
 //get order with shipper id
 const getOrderShipper = (req, res) => {
@@ -74,30 +98,33 @@ const getDetailbyOrderId = (req, res) => {
         })
     })
 }
-const order =  (req, res) => {
+const order = (req, res) => {
     db.order.create({
         user_id: req.user.id,
         address: req.body.address,
         time: req.body.time,
         store_id: req.body.store_id
-    }).then(async function(order) {
+    }).then(async function (order) {
         const dish = req.body.dish;
         order.dataValues.dish = []
-        for(var i in dish){  
+        for (var i in dish) {
             await db.order_detail.create({
-                    order_id: order.id,
-                    dish_id: dish[i].dish_id,
-                    quantity: dish[i].quantity,
-                    current_price: dish[i].current_price
-                }).then(function(dish){
-                    order.dataValues.dish.push(dish);
-                })
+                order_id: order.id,
+                dish_id: dish[i].dish_id,
+                quantity: dish[i].quantity,
+                current_price: dish[i].current_price
+            }).then(function (dish) {
+                order.dataValues.dish.push(dish);
+            })
         }
         res.json({
             success: true,
             order: order
         })
     })
+}
+const getOrderUser = (req, res) => {
+
 }
 
 const orderController = {};
