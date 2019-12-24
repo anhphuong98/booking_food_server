@@ -78,9 +78,41 @@ const order = (req, res) => {
     
 }
 
+
+
+const getOrderByStoreId = (req, res) => {
+    db.order.findAll({
+        where : {
+            store_id : req.params.id
+        }, 
+        include : [{
+            model : db.user,
+            attributes : ['name', 'email']
+        }, {
+            model : db.shipper,
+            attributes : ['name', 'email']
+        }, {
+            model : db.store,
+            attributes : ['name', 'email', 'address']
+        }]
+    }).then(function(data){
+        if(data.length == 0){
+            res.json({
+                success : false,
+                message : "Store has no order"
+            });
+        }else{
+            res.json({
+                success : true,
+                data
+            })
+        }
+    })
+}
 const orderController = {};
 orderController.getAllOrder = getAllOrder
 orderController.getOrderShipper = getOrderShipper;
 orderController.getDetailbyOrderId = getDetailbyOrderId;
+orderController.getOrderByStoreId = getOrderByStoreId;
 
 module.exports = orderController;

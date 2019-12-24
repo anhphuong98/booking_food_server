@@ -4,7 +4,10 @@ const adminController = require('../controllers/adminController');
 const store = require('../controllers/store');
 const comment = require('../controllers/comment');
 const evaluation = require('../controllers/evaluation');
+const orderController = require('../controllers/orderController');
+const categoryController = require('../controllers/categoryController');
 var authenticate = require('../middleware/authenticate');
+
 
 module.exports = (app) => {
 
@@ -55,7 +58,7 @@ module.exports = (app) => {
     // get all store for admin
     app.get('/api/store', store.index);
     // get info store for admin, store
-    app.get('/api/store/:id', authenticate(['admin', 'store']), store.show);
+    app.get('/api/store/:id', store.show);
     // delete store for admin
     app.delete('/api/store/:id', authenticate('admin'), store.destroy);
     // update store for store and admin
@@ -82,4 +85,13 @@ module.exports = (app) => {
     app.put('/api/evaluation/:id', authenticate('user'), evaluation.update);
     // Get average Evaluation of store'
     app.get('/api/storeEvaluation/:id', authenticate(['user', 'admin', 'store', 'shipper']), evaluation.getAverageEvaluation);
+
+    // shipper_Store_Order
+    // get order with id of store
+    app.get('/api/order/store/:id', authenticate(['admin', 'store']), orderController.getOrderByStoreId);
+
+
+    // get category by store_id
+    app.get('/api/category/store/:id', categoryController.getCategoryByStoreId);
+
 }

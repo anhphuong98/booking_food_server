@@ -33,6 +33,10 @@ module.exports = function(sequelize, DataTypes){
         Category.belongsTo(models.store, {
             foreignKey : 'store_id'
         })
+        Category.belongsToMany(models.store, {
+            through : models.dish,
+            foreignKey : 'category_id'
+        });
     }
     return Category;
 }

@@ -79,10 +79,44 @@ const deleteCategory = (req, res) => {
 
 }
 
+
+const getCategoryByStoreId = (req, res) => {
+    const page = Number(req.query.page);
+    const pageSize = Number(req.query.pageSize);
+
+    const limit = pageSize? pageSize : 20;
+    const offset = page? page*limit : 0
+    db.categories.findAndCountAll({
+        attributes : ['id', 'name', 'status'],
+        include : [{
+            model : db.store,
+            attributes : ['name'],
+            where : {
+                id : req.params.id
+            }
+        }, {
+            model : db.dish
+        }],
+        limit: limit,
+        offset: offset,
+        distinct: true
+    }).then(function(data){
+        data.page = page? page : 0
+        data.pageSize = limit
+        res.json({
+            success : true,
+            data : data
+        })
+    }).catch(function(err){
+        console.log(err);
+    })
+}
+
 const category = {};
 category.getCategory = getCategory;
 category.createCategory = createCategory;
 category.updateCategory = updateCategory;
 category.deleteCategory = deleteCategory;
+category.getCategoryByStoreId = getCategoryByStoreId;
 
 module.exports = category
