@@ -6,7 +6,16 @@ var jwt = require('jsonwebtoken');
 var config = require('../config/config.json');
 
 const index = function(req, res){
-    db.user.findAll().then(function(data){
+    const page = Number(req.query.page);
+    const pageSize = Number(req.query.pageSize);
+    const limit = pageSize ? pageSize : 20;
+    const offset = page ? page * limit : 0;
+    db.user.findAndCountAll({
+        limit : limit,
+        offset : offset,
+    }).then(function(data){
+        data.page = page ? page : 0;
+        data.pageSize = limit;
         res.status(200).json(data);
     });
 }
@@ -115,7 +124,7 @@ const show = function(req, res){
                 message : "Lay thong tin that bai"
             })
         }
-         db.user.findOne({
+        db.user.findOne({
             where : {
                 id : req.user.id
             }

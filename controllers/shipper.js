@@ -5,7 +5,16 @@ const salt = bcrypt.genSaltSync(10);
 const config = require('../config/config.json');
 
 const index = function(req, res){
-    db.shipper.findAll().then(function(data){
+    const page = Number(req.query.page);
+    const pageSize = Number(req.query.pageSize);
+    const limit  = pageSize ? pageSize : 20;
+    const offset = page ? page * limit : 0; 
+    db.shipper.findAndCountAll({
+        limit : limit,
+        offset : offset,
+    }).then(function(data){
+        data.page = page ? page : 0;
+        data.pageSize = limit;
         res.json(data);
     })
 }
