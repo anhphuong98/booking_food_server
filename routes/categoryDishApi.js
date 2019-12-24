@@ -36,5 +36,7 @@ module.exports = function (app) {
         //get order of a shipper by his id
         app.get('/api/order/shipper/:id', authenticate(['shipper', 'admin']), orderController.getOrderShipper);
         //get order detail by order id
-        app.get('/api/orderDetail/:id', authenticate(['admin', 'shipper', 'user', 'store']), orderController.getDetailbyOrderId)
+        app.get('/api/orderDetail/:id', authenticate(['admin', 'shipper', 'user', 'store']), orderController.getDetailbyOrderId);
+        //order an order
+        app.post('/api/order', authenticate('user'), orderController.order);
 }
