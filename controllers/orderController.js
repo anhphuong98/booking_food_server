@@ -191,9 +191,6 @@ const getNewOrderByShipperId = (req, res) => {
         },{
             attributes : ['name', 'address', 'phone'],
             model : db.store
-        }, {
-            attributes : ['current_price'],
-            model : db.order_detail
         }]
     }).then(function(order){
         if(!order){
@@ -202,10 +199,118 @@ const getNewOrderByShipperId = (req, res) => {
                 message : "Không tồn tại đơn hàng mới cho shipper"
             })
         }else{
+            db.order_detail.findAll({
+                where : {
+                    order_id : order.id
+                }
+            }).then(function(order_details){
+                var totalPrice = 0;
+                order_details.forEach(function(order_detail){
+                    totalPrice += order_detail.current_price;
+                });
+                order.dataValues.totalPrice = totalPrice;
+                res.json({
+                    success : true,
+                    data : order
+                });
+            });
+           
+        }
+    })
+}
+
+
+const update = (req, res) => {
+    db.order.findOne({
+        where : {
+            id : req.params.id
+        }
+    }).then(function(order){
+        if(!order){
             res.json({
-                success : true,
-                data : order
+                success : fasle,
+                message : "Không tồn tại order"
             })
+        }else{
+            db.shipper.findOne({
+                where : {
+                    id : req.user.id
+                }
+            }).then(function(shipper){
+                if(shipper.id != order.shipper_id){
+                    res.json({
+                        success : false,
+                        message : "Đơn hàng này không phải của bạn"
+                    })
+                }
+                else if(req.body.status == 0){
+                    const Op = Sequelize.Op;
+                    db.shipper.findAll({
+                        where : {  
+                            isOnline : 1,
+                            id : {
+                                [Op.ne] : shipper.id
+                            }
+                        }
+                    }).then(function(result){
+                        if(result.length == 0){
+                            order.update({
+                                status : 3,
+                                shipper_id : null
+                            });
+                            res.json({
+                                success : true,
+                                message : "Hủy đơn hàng thành công, đơn hàng không được chuyển"
+                            });
+                        }else{
+                            const indexShipper = Math.floor(Math.random()*(result.length));
+                            order.update({
+                                shipper_id : result[indexShipper].id
+                            });
+                            res.json({
+                                success : true,
+                                message : "Hủy đơn hàng thành công, đơn hàng được chuyển"
+                            })
+                        }
+                    })
+                }
+                else if(req.body.status == 1){
+                    order.update({
+                        status : 1
+                    });
+                    shipper.update({
+                        isOnline : 2
+                    });
+                    res.json({
+                        success : true,
+                        message : "Nhận đơn hàng thành công"
+                    });
+                }
+                else if(req.body.status == 2){
+                    order.update({
+                        status :  2
+                    });
+                    shipper.update({
+                        isOnline : 1
+                    });
+                    res.json({
+                        success : true,
+                        message : "Hoàn thành đơn hàng"
+                    });
+                }
+                else if(req.body.status == 3){
+                    order.update({
+                        status :  3
+                    });
+                    shipper.update({
+                        isOnline : 1
+                    });
+                    res.json({
+                        success : true,
+                        message : "Hủy đơn hàng thành công"
+                    });
+                }
+            });            
         }
     })
 }
@@ -216,5 +321,6 @@ orderController.getDetailbyOrderId = getDetailbyOrderId;
 orderController.getOrderByStoreId = getOrderByStoreId;
 orderController.order = order;
 orderController.getNewOrderByShipperId = getNewOrderByShipperId;
+orderController.update = update;
 
 module.exports = orderController;
