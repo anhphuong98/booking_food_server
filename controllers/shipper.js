@@ -248,6 +248,7 @@ const update = function(req, res){
             password :  bcrypt.hashSync(req.body.password, salt),
             url_image : req.body.url_image,
             status : req.body.status,
+            isOnline : req.body.isOnline,
             identification : req.body.identification,
             license_plates : req.body.license_plates
         },{
@@ -283,7 +284,8 @@ const update = function(req, res){
             password :  bcrypt.hashSync(req.body.password, salt),
             url_image : req.body.url_image,
             identification : req.body.identification,
-            license_plates : req.body.license_plates
+            license_plates : req.body.license_plates,
+            isOnline : req.body.isOnline
         },{
             where : {
                 id : req.user.id
