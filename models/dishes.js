@@ -40,7 +40,8 @@ module.exports = (sequelize, DataTypes)=>{
             foreignKey: 'category_id'
         })
         Dish.hasMany(models.order_detail, {
-            foreignKey: 'dish_id'
+            foreignKey: 'dish_id',
+            onDelete : 'SET NULL'
         })
     }
     return Dish;

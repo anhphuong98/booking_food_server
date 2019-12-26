@@ -89,7 +89,7 @@ const getDetailbyOrderId = (req, res) => {
         where: {
             order_id: req.params.id
         },
-        attributes: ['id', 'order_id', 'quantity', 'current_price'],
+        attributes: ['id', 'order_id', 'quantity', 'current_price', 'name_dish', 'sale_dish', 'url_image_dish'],
         include: [db.dish]
     }).then(function (result) {
         res.status(200).json({
@@ -129,7 +129,10 @@ const order = (req, res) => {
                         order_id: order.id,
                         dish_id: dish[i].dish_id,
                         quantity: dish[i].quantity,
-                        current_price: dish[i].current_price
+                        current_price: dish[i].current_price,
+                        name_dish : dish[i].name,
+                        sale_dish : dish[i].sale,
+                        url_image_dish : dish[i].url_image,
                     }).then(function (dish) {
                         order.dataValues.dish.push(dish);
                     })
