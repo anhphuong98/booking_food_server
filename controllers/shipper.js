@@ -45,6 +45,9 @@ const login = function(req, res){
                 message : "Tài khoản bị khóa"
             })
         }
+        shipper.update({
+            isOnline : 1
+        })
         var payload = {
             id : shipper.id,
             email : shipper.email,
@@ -268,7 +271,7 @@ const update = function(req, res){
                 message : "Cap nhat thong tin that bai"
             })
         }
-         if(req.body.password){
+        if(req.body.password){
             db.shipper.update({
                 password : bcrypt.hashSync(req.body.password, salt)
             }, {
@@ -281,7 +284,6 @@ const update = function(req, res){
             name : req.body.name,
             phone : req.body.phone,
             address : req.body.address,
-            password :  bcrypt.hashSync(req.body.password, salt),
             url_image : req.body.url_image,
             identification : req.body.identification,
             license_plates : req.body.license_plates,
