@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         dish_id: {
             type: DataTypes.INTEGER,
-            allowNull: false
         },
         quantity: {
             type: DataTypes.INTEGER,
@@ -40,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     OrderDetail.associate = (models)=>{
         OrderDetail.belongsTo(models.dish, {
             foreignKey: 'dish_id',
-            onDelete : 'SET NULL'
+            onDelete : 'SET NULL',
         })
         OrderDetail.belongsTo(models.order, {
             foreignKey: 'order_id'
