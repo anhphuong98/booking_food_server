@@ -1,6 +1,10 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
     const Order = sequelize.define('order', {
         id: {
             type: DataTypes.INTEGER,
@@ -14,8 +18,21 @@ module.exports = (sequelize, DataTypes) => {
         address: {
             type: DataTypes.STRING
         },
+        name_recieve : {
+            type : DataTypes.STRING
+        },
+        phone_recieve : {
+            type : DataTypes.BIGINT
+        },
+        note :  {
+            type : DataTypes.TEXT
+        },
+        ship_price : {
+            type : DataTypes.FLOAT
+        },
         time: {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            defaultValue: dateTime
         },
         status: {
             type: DataTypes.INTEGER,
