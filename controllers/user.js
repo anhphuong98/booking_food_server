@@ -61,7 +61,9 @@ const login = function(req, res){
                 id : user.id,
                 email : user.email,
                 name : user.name,
-                url_image : user.url_image
+                url_image : user.url_image,
+                address : user.address,
+                phone : user.phone
             }
         });
     });

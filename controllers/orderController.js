@@ -115,7 +115,10 @@ const order = (req, res) => {
             db.order.create({
                 user_id: req.user.id,
                 address: req.body.address,
-                time: req.body.time,
+                name_recieve : req.body.name_recieve,
+                phone_recieve : req.body.phone_recieve,
+                note : req.body.note,
+                ship_price : req.body.ship_price,
                 store_id: req.body.store_id,
                 shipper_id : shipper_id
             }).then(async function (order) {
