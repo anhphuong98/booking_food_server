@@ -13,7 +13,7 @@ module.exports = function (app) {
     //update category
     app.put('/api/category/:id', authenticate(['store', "admin"]), categoryController.updateCategory);
     //delete category item
-    app.delete('/api/category/:id', authenticate(['store', "admin"]), categoryController.deleteCategory);
+    app.delete('/api/categ ory/:id', authenticate(['store', "admin"]), categoryController.deleteCategory);
 
     //DISHES
     //get all dishes
@@ -31,7 +31,7 @@ module.exports = function (app) {
     
     //ORDERS
     //admin gets all order existed
-        app.get('/api/order', authenticate(['admin', 'user']), orderController.getAllOrder);
+        app.get('/api/order', authenticate(['admin', 'user', 'store']), orderController.getAllOrder);
         //get order of a shipper by his id
         app.get('/api/order/shipper/:id', authenticate(['shipper', 'admin']), orderController.getOrderShipper);
         //get order detail by order id
