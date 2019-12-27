@@ -13,7 +13,7 @@ module.exports = function (app) {
     //update category
     app.put('/api/category/:id', authenticate(['store', "admin"]), categoryController.updateCategory);
     //delete category item
-    app.delete('/api/category/:id', authenticate(['store', "admin"]), categoryController.deleteCategory);
+    app.delete('/api/categ ory/:id', authenticate(['store', "admin"]), categoryController.deleteCategory);
 
     //DISHES
     //get all dishes
