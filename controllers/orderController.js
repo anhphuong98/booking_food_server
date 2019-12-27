@@ -39,6 +39,27 @@ const getAllOrder = (req, res) => {
             })
         })
     }
+    if(req.user.role == 'store') {
+        const page = Number(req.query.page);
+        const pageSize = Number(req.query.pageSize);
+    
+        const limit = pageSize ? pageSize : 20;
+        const offset = page ? page * limit : 0;
+        db.order.findAndCountAll({
+            where: {
+                store_id: req.user.id
+            }, 
+            limit: limit,
+            offset: offset
+        }).then(function (order) {
+            order.page = page ? page : 0;
+            order.pageSize = pageSize ? pageSize : 20
+            res.json({
+                success: true,
+                data: order
+            })
+        })
+    }
 }
 //get order with shipper id
 const getOrderShipper = (req, res) => {
