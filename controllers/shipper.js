@@ -5,7 +5,16 @@ const salt = bcrypt.genSaltSync(10);
 const config = require('../config/config.json');
 
 const index = function(req, res){
-    db.shipper.findAll().then(function(data){
+    const page = Number(req.query.page);
+    const pageSize = Number(req.query.pageSize);
+    const limit  = pageSize ? pageSize : 20;
+    const offset = page ? page * limit : 0; 
+    db.shipper.findAndCountAll({
+        limit : limit,
+        offset : offset,
+    }).then(function(data){
+        data.page = page ? page : 0;
+        data.pageSize = limit;
         res.json(data);
     })
 }
@@ -36,6 +45,9 @@ const login = function(req, res){
                 message : "Tài khoản bị khóa"
             })
         }
+        shipper.update({
+            isOnline : 1
+        })
         var payload = {
             id : shipper.id,
             email : shipper.email,
@@ -239,6 +251,7 @@ const update = function(req, res){
             password :  bcrypt.hashSync(req.body.password, salt),
             url_image : req.body.url_image,
             status : req.body.status,
+            isOnline : req.body.isOnline,
             identification : req.body.identification,
             license_plates : req.body.license_plates
         },{
@@ -258,7 +271,7 @@ const update = function(req, res){
                 message : "Cap nhat thong tin that bai"
             })
         }
-         if(req.body.password){
+        if(req.body.password){
             db.shipper.update({
                 password : bcrypt.hashSync(req.body.password, salt)
             }, {
@@ -271,10 +284,10 @@ const update = function(req, res){
             name : req.body.name,
             phone : req.body.phone,
             address : req.body.address,
-            password :  bcrypt.hashSync(req.body.password, salt),
             url_image : req.body.url_image,
             identification : req.body.identification,
-            license_plates : req.body.license_plates
+            license_plates : req.body.license_plates,
+            isOnline : req.body.isOnline
         },{
             where : {
                 id : req.user.id

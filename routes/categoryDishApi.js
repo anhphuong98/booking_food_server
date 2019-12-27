@@ -38,4 +38,8 @@ module.exports = function (app) {
         app.get('/api/orderDetail/:id', authenticate(['admin', 'shipper', 'user', 'store']), orderController.getDetailbyOrderId);
         //order an order
         app.post('/api/order', authenticate('user'), orderController.order);
+        // shipper get order with status "0"
+        app.get('/api/neworder/shipper', authenticate('shipper'), orderController.getNewOrderByShipperId);
+        // shipper edit order's status
+        app.put('/api/order/:id', authenticate('shipper'), orderController.update);
 }

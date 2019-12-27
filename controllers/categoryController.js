@@ -24,26 +24,45 @@ const getCategory = (req, res) => {
     })
 }
 //create category
-const createCategory = async function (req, res) {
-    console.log("create category");
-
-    try {
-        const category = await db.categories.create({
-            name: req.body.name,
-            status: req.body.status,
-            store_id : req.body.store_id
+const createCategory =  (req, res) => {
+    if(req.user.role == "store"){
+        db.categories.create({
+            name : req.body.name,
+            status : 0,
+            store_id : req.user.id
+        }).then(function(category){
+            if(!category){
+                res.json({
+                    success : false,
+                    message : "Them that bai"
+                })
+            }else{
+                res.json({
+                    success : true,
+                    message : "Them thanh cong",
+                    data : category
+                })
+            }
         })
-
-        if (!category) {
-            res.status(402).json({
-                success: false,
-                message: "category is null"
-            })
-        } else {
-            res.json(category)
-        }
-    } catch (err) {
-        console.log("createCategory-createNew", err)
+    }
+    else if(req.user.role == "admin"){
+        db.categories.create({
+            name : req.body.name,
+            status : 1,
+        }).then(function(category){
+            if(!category){
+                res.json({
+                    success : false,
+                    message : "Them that bai"
+                })
+            }else{
+                res.json({
+                    success : true,
+                    message : "Them thanh cong",
+                    data : category
+                })
+            }
+        })
     }
 }
 

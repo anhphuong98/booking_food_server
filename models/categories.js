@@ -11,15 +11,12 @@ module.exports = function(sequelize, DataTypes){
             },
             name: {
                 type: DataTypes.STRING,
-                defaultValue: 0,
             },
             status: {
-                type: DataTypes.INTEGER,
-                allowNull: false
+                type: DataTypes.INTEGER
             },
             store_id : {
-                type : DataTypes.INTEGER,
-                allowNull: false
+                type : DataTypes.INTEGER
             }
         },
         {

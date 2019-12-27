@@ -88,7 +88,11 @@ const index = function(req, res){
 
     const limit = pageSize ? pageSize : 20;
     const offset = page ? page*limit : 0;
-    db.store.findAndCountAll({limit: limit, offset: offset}).then(function(data){
+    db.store.findAndCountAll({
+        limit: limit, 
+        offset: offset,
+        attributes : ['id', 'email', 'name', 'phone', 'address', 'url_image', 'open_time', 'close_time']
+    }).then(function(data){
         data.page = page ? page : 0;
         data.pageSize = limit;
         res.status(200).json(data);
@@ -97,49 +101,24 @@ const index = function(req, res){
 
 
 const show = function(req, res){
-     if(req.user.role === 'admin'){
-        db.store.findOne({
-            where : {
-                id : req.params.id
-            }
-        }).then(function(store){
-            if(!store){
-                res.json({
-                    success : false,
-                    message : "Lay thong tin that bai"
-                });
-            }else{
-                res.json({
-                    success : true,
-                    data : store
-                })
-            }
-        });
-    }else{
-        if(req.user.id != req.params.id){
+    db.store.findOne({
+        where : {
+            id : req.params.id
+        },
+        attributes : ['id', 'email', 'name', 'phone', 'address', 'url_image', 'open_time', 'close_time']
+    }).then(function(store){
+        if(!store){
             res.json({
                 success : false,
                 message : "Lay thong tin that bai"
+            });
+        }else{
+            res.json({
+                success : true,
+                data : store
             })
         }
-         db.store.findOne({
-            where : {
-                id : req.user.id
-            }
-        }).then(function(store){
-            if(!store){
-                res.json({
-                    success : false,
-                    message : "Lay thong tin that bai"
-                });
-            }else{
-                res.json({
-                    success : true,
-                    data : store
-                });
-            }
-        });
-    }
+    });
 }
 
 const destroy = function(req, res){
