@@ -31,41 +31,39 @@ const login = function(req, res){
                 success : false,
                 message : "Email không tồn tại"
             });
-        }
-        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if(!passwordIsValid){
+        } else if (!bcrypt.compareSync(req.body.password, user.password)) {
             res.json({
                 success : false,
                 message : "Mật khẩu không chính xác"
             });
-        }
-        var accountIsActive = (user.status == 1);
-        if(accountIsActive){
+        } else if (user.status == 1) {
             res.json({
                 success : false,
                 message : "Tài khoản bị khóa"
             })
-        }
-        var payload = {
-            id : user.id,
-            email : user.email,
-            role : 'user'
-        };
-        var token = jwt.sign(payload, config.secret, {
-            expiresIn : 3600
-        });
-        res.json({
-            success : true,
-            token : token,
-            data : {
+        } else {
+            var payload = {
                 id : user.id,
                 email : user.email,
-                name : user.name,
-                url_image : user.url_image,
-                address : user.address,
-                phone : user.phone
-            }
-        });
+                role : 'user'
+            };
+            var token = jwt.sign(payload, config.secret, {
+                expiresIn : 3600
+            });
+            res.json({
+                success : true,
+                token : token,
+                data : {
+                    id : user.id,
+                    email : user.email,
+                    name : user.name,
+                    password : user.password,
+                    url_image : user.url_image,
+                    address : user.address,
+                    phone : user.phone
+                }
+            });
+        }
     });
 
 }
@@ -194,13 +192,17 @@ const update = function(req, res){
                 message : "Cap nhat thong tin that bai"
             })
         }
-         if(req.body.password){
+        if(req.body.password){
             db.user.update({
                 password : bcrypt.hashSync(req.body.password, salt)
             }, {
                 where : {
                     id : req.user.id
                 }
+            });
+            return res.json({
+                success : true,
+                message : "Cap nhat mat khau thanh cong"
             });
         }
         db.user.update({
@@ -210,7 +212,7 @@ const update = function(req, res){
             url_image : req.body.url_image
         },{
             where : {
-                id : req.user.id
+                id : req.params.id
             }
         }).then(user => {
             res.json({

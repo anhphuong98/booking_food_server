@@ -20,6 +20,7 @@ module.exports = (app) => {
     app.delete('/api/user/:id', authenticate('admin'), user.destroy);
     // update account user for admin, user
     app.put('/api/user/:id', authenticate(['admin', 'user']), user.update);
+    // app.put('/api/user/:id', user.update);
     // user login
     app.post('/api/user/login', user.login);
     // user register
