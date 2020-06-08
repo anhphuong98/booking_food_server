@@ -13,7 +13,7 @@ const getAllDish = (req, res) => {
         data.pageSize = limit
         res.status(200).json({
             success: true,
-            dishes: data
+            data
         })
     })
 }
@@ -57,15 +57,11 @@ const getDishofStore = (req, res) => {
         data.page = page ? page : 0;
         data.pageSize = limit;
         if (data.count) {
-            res.status(200).json({
-                success: true,
-                dishes: data
-            })
+            res.json(data)
         } else if (!data.count) {
             res.status(500).json({
                 success: false,
-                message: "Invalid store id",
-                dishes: data
+                message: "Invalid store id"
             })
         }
     })
