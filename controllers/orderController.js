@@ -341,6 +341,37 @@ const update = (req, res) => {
         }
     })
 }
+
+const getOrderByUserID = (req, res) => {
+    db.user.findOne({
+        id : req.user.id
+    }).then(function(user) {
+        if(!user) {
+            res.json({
+                success : false,
+                message : "Khong ton tai user"
+            });
+        }else {
+            db.order.findAll({
+                where : {
+                    user_id : user.id
+                }
+            }).then(function(orders) {
+                if(order.length == 0) {
+                    res.json({
+                        success : false,
+                        message : "Invalid order"
+                    });
+                }else {
+                    res.json({
+                        success : true,
+                        data : orders
+                    })
+                }
+            })
+        }
+    });
+}
 const orderController = {};
 orderController.getAllOrder = getAllOrder
 orderController.getOrderShipper = getOrderShipper;
@@ -349,5 +380,6 @@ orderController.getOrderByStoreId = getOrderByStoreId;
 orderController.order = order;
 orderController.getNewOrderByShipperId = getNewOrderByShipperId;
 orderController.update = update;
+orderController.getOrderByUserID = getOrderByUserID;
 
 module.exports = orderController;
