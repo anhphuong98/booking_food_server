@@ -23,6 +23,16 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(function(req, res, next){
+  res.io = io;
+  next();
+});
+
+app.use(function(socket_io, res, next){
+  res.io = io;
+  next();
+});
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -45,10 +55,16 @@ app.use('/users', usersRouter);
 api(app);
 caDiApi(app);
 
+
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+// add socket to res
+
+
 
 // error handler
 
@@ -64,12 +80,18 @@ app.use(function(err, req, res, next) {
 
 // Khoi dong server
 
-db.sequelize.sync().then(function(){
-    app.listen(8080, () => {
-        console.log("Server is running at localhost:8080");
-    })
-})
+// db.sequelize.sync().then(function(){
+//     app.listen(8080, () => {
+//         console.log("Server is running at localhost:8080");
+//     })
+// })
+var server = app.listen(4000);
+var io = require('socket.io')(server);
+
+var socketController = require('./controllers/socketController');
+var socket_io = io.on('connection', function(socket){
+  socketController.handle(socket_io, socket);
+});
 
 
-
-module.exports = app;
+module.exports = {app : app, server : server};
