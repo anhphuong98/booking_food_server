@@ -85,7 +85,8 @@ const register = function(req, res){
                 email : req.body.email,
                 password : bcrypt.hashSync(req.body.password, salt),
                 phone : req.body.phone,
-                address : req.body.address
+                address : req.body.address,
+                url_image: req.body.url_image
             }).then(function(account){
                 res.json({
                     success : true,
