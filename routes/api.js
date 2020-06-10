@@ -9,8 +9,10 @@ const categoryController = require('../controllers/categoryController');
 var authenticate = require('../middleware/authenticate');
 
 
-module.exports = (app) => {
 
+
+
+module.exports = (app) => {
     // user
     //  get all user for admin
     app.get('/api/user', authenticate('admin'), user.index);

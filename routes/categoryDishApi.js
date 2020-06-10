@@ -1,6 +1,7 @@
 const categoryController = require("../controllers/categoryController");
 const dishController = require("../controllers/dishController");
-const orderController = require("../controllers/orderController")
+const orderController = require("../controllers/orderController");
+const socketController = require("../controllers/socketController");
 passport = require('passport');
 const authenticate = require('../middleware/authenticate')
 
@@ -37,7 +38,8 @@ module.exports = function (app) {
         //get order detail by order id
         app.get('/api/orderDetail/:id', authenticate(['admin', 'shipper', 'user', 'store']), orderController.getDetailbyOrderId);
         //order an order
-        app.post('/api/order', authenticate('user'), orderController.order);
+        // app.post('/api/order', authenticate('user'), orderController.order);
+        app.post('/api/order', authenticate('user'), socketController.order);
         // shipper get order with status "0"
         app.get('/api/neworder/shipper', authenticate('shipper'), orderController.getNewOrderByShipperId);
         // shipper edit order's status
