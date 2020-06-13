@@ -355,9 +355,14 @@ const getOrderByUserID = (req, res) => {
             db.order.findAll({
                 where : {
                     user_id : user.id
-                }
+                },
+                include : [
+                    {
+                        model : db.store
+                    }
+                ]
             }).then(function(orders) {
-                if(order.length == 0) {
+                if(orders.length == 0) {
                     res.json({
                         success : false,
                         message : "Invalid order"
@@ -368,7 +373,7 @@ const getOrderByUserID = (req, res) => {
                         data : orders
                     })
                 }
-            })
+            });
         }
     });
 }

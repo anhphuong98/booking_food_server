@@ -78,7 +78,7 @@ const handle = (socket_io, socket) => {
     // lang nghe su kien shipper nhan hang
     socket.on("shipper-receive-order", (order_id) => {
 
-            socket_io.emit("shipper-receive-order-" + order_id, {except : 1});
+            socket_io.emit("shipper-receive-order-" + order_id, {accept : 1});
         });
     // lang nghe su kien shipper huy don hang
     socket.on("shipper-cancel-order", (data) => {
@@ -103,7 +103,7 @@ const handle = (socket_io, socket) => {
                     }
                 }
                 console.log("sau khi xoa " + Object.keys(arrayShipperCancle).length);
-                socket_io.emit("server-cancel-order-" + order_cancel_id, {except : 0});
+                socket_io.emit("server-cancel-order-" + order_cancel_id, {accept : 0});
                 console.log("huy don hang roi nhe nhes")
                 
             } else {
