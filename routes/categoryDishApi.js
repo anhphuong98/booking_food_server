@@ -44,6 +44,5 @@ module.exports = function (app) {
         app.get('/api/neworder/shipper', authenticate('shipper'), orderController.getNewOrderByShipperId);
         // shipper edit order's status
         app.put('/api/order/:id', authenticate('shipper'), orderController.update);
-
         app.get('/api/order/user/:id', authenticate('user'), orderController.getOrderByUserID);
 }
