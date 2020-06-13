@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "",
-    "database": "booking_app",
+    "password": "pjtjamj",
+    "database": "ptpmcn_booking",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": "0"
