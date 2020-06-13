@@ -41,7 +41,7 @@ const order = (req, res) => {
                 }
                 res.json({
                     success: true,
-                    order: order
+                    order_id: order.id
                 });
                
             })
@@ -57,8 +57,13 @@ const order = (req, res) => {
     // });
     
 }
+ // Khoi tao hashmap cac shipper da huy don hang nay
+let arrayShipperCancle = {};
 const handle = (socket_io, socket) => {
+    // Log ra khi co nguoi ket noi
     console.log("hello ae vao")
+
+    // lang nghe su kien client dat hang
     socket.on("client-send-order", function(order_id) {
         db.order.findOne({
             where : {
@@ -67,14 +72,52 @@ const handle = (socket_io, socket) => {
         }).then(function(order) {
             const shipper_id = order.shipper_id;
             console.log(shipper_id);
-            socket_io.emit("server-send-order-" + shipper_id, order.id);
+            socket_io.emit("server-send-order-" + shipper_id, {data : order.id});
         });
     });
-    socket.on("shipper-receive-order", () => {
-        socket_io.emit("shipper-receive-order",)
-    })
-    socket.on("shipper-cancel-order", () => {
-        socket_io.emit("shipper-cancel-order", () => {
+    // lang nghe su kien shipper nhan hang
+    socket.on("shipper-receive-order", (order_id) => {
+
+            socket_io.emit("shipper-receive-order-" + order_id, {except : 1});
+        });
+    // lang nghe su kien shipper huy don hang
+    socket.on("shipper-cancel-order", (data) => {
+        const object = JSON.parse(data);
+        const shipper_cancel_id = object.shipper_id;
+        const order_cancel_id = object.order_id;
+        arrayShipperCancle[shipper_cancel_id] = order_cancel_id;
+        console.log("in ra do dai cua mang oke la" + Object.keys(arrayShipperCancle).length)
+        db.shipper.findAll({
+            where : {  
+                isOnline : 1
+            }
+        }).then(function(shippers){
+            // Khai bao mang chua cac shipper da huy don hang
+            let arrayIDShipper = Object.keys(arrayShipperCancle);
+            console.log("do dai mang " + arrayIDShipper.length)
+            if(shippers.length === arrayIDShipper.length){
+                for(i = 0; i < arrayIDShipper.length; i++) {
+                    let key = arrayIDShipper[i];
+                    if(arrayShipperCancle[key] === order_cancel_id) {
+                        delete(arrayShipperCancle[key]);
+                    }
+                }
+                console.log("sau khi xoa " + Object.keys(arrayShipperCancle).length);
+                socket_io.emit("server-cancel-order-" + order_cancel_id, {except : 0});
+                console.log("huy don hang roi nhe nhes")
+                
+            } else {
+                let shipper_id;
+                do {
+                    console.log("id cua shipper trong mang " + arrayIDShipper[0]);
+                    console.log("vao day day day nhe" + shippers.length)
+                    let indexShipper = Math.floor(Math.random()*(shippers.length));
+                    shipper_id = shippers[indexShipper].id;   
+                    console.log("Trong khi khi random: " + shipper_id);
+                } while (arrayIDShipper.includes(shipper_id.toString()));
+                console.log("Sau khi random: " + shipper_id);
+                socket_io.emit("server-send-order-" + shipper_id, {data : order_cancel_id});
+            }
 
         });
     });
