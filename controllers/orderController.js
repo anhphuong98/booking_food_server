@@ -344,7 +344,9 @@ const update = (req, res) => {
 
 const getOrderByUserID = (req, res) => {
     db.user.findOne({
-        id : req.user.id
+        where : {
+            id : req.user.id
+        }
     }).then(function(user) {
         if(!user) {
             res.json({
