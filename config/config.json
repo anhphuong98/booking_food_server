@@ -1,8 +1,13 @@
 {
   "development": {
     "username": "root",
+<<<<<<< HEAD
     "password": "pjtjamj",
     "database": "ptpmcn_booking",
+=======
+    "password": "",
+    "database": "booking_app",
+>>>>>>> 74412acb21724cb5076b1cdba668c06831f1fcf1
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": "0"
