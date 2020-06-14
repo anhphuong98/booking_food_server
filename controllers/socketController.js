@@ -9,7 +9,7 @@ const order = (req, res) => {
         if(shipper.length == 0){
             res.json({
                 success : false,
-                message : "Đặt hàng thất bại, không có shipper đang online"
+                order_id : -1
             })
         }else{
             const indexShipper = Math.floor(Math.random()*(shipper.length));

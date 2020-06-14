@@ -85,7 +85,9 @@ app.use(function(err, req, res, next) {
 //         console.log("Server is running at localhost:8080");
 //     })
 // })
-var server = app.listen(4000);
+var server = app.listen(4000, () => {
+  console.log("server is running at http://localhost:4000");
+});
 var io = require('socket.io')(server);
 
 var socketController = require('./controllers/socketController');
