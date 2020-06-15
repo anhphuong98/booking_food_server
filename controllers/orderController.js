@@ -210,7 +210,7 @@ const getNewOrderByShipperId = (req, res) => {
         attributes : ['id', 'address', 'time'],
         where : {
             shipper_id : req.user.id,
-            status : 1
+            status : req.body.status
         },
         include : [{
             attributes : ['name', 'phone'],
