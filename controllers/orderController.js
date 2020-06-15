@@ -248,39 +248,59 @@ const getNewOrderByShipperId = (req, res) => {
 
 
 const update = (req, res) => {
-    db.order.findOne({
+    db.order.update({
+        status : req.body.status
+    }, {
         where : {
             id : req.params.id
         }
-    }).then(function(order) {
-        if(!order) {
-            res.json({
-                success : false,
-                message : "Khong ton tai order"
-            });
-        }else{
-            db.shipper.findOne({
-                where : {
-                    id : req.user.id
-                }
-            }).then(function(shipper) {
-                if(shipper.id != order.shipper_id) {
-                    res.json({
-                        success : false,
-                        message : "Đơn hàng này không phải của bạn"
-                    })
-                }else{
-                    order.update({
-                        status : req.body.status
-                    });
-                    res.json({
-                        success : true,
-                        message : "Cập nhật đơn hàng thành công"
-                    });
-                }
-            });
-        }
+    }).then(function() {
+        res.json({
+            success : true,
+            message : "Cap nhat status thanh cong"
+        })
     })
+    // db.order.findOne({
+    //     where : {
+    //         id : req.params.id
+    //     }
+    // }).then(function(order) {
+    //     if(!order) {
+    //         res.json({
+    //             success : false,
+    //             message : "Khong ton tai order"
+    //         });
+    //     }else{
+    //         db.shipper.findOne({
+    //             where : {
+    //                 id : req.user.id
+    //             }
+    //         }).then(function(shipper) {
+    //             if(shipper.id != order.shipper_id) {
+    //                 res.json({
+    //                     success : false,
+    //                     message : "Đơn hàng này không phải của bạn"
+    //                 })
+    //             }else{
+    //                 db.order.update({
+    //                     status : req.body.status
+    //                 }, {
+    //                     where : {
+    //                         id : req.params.id
+    //                     }
+    //                 }).then(() => {
+    //                     res.json({
+    //                         success : true,
+    //                         message : "Cập nhật đơn hàng thành công"
+    //                     });
+    //                 });      
+    //             }
+    //         });
+    //     }
+    // })
+
+
+
     // db.order.findOne({
     //     where : {
     //         id : req.params.id

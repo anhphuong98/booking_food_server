@@ -46,8 +46,7 @@ const order = (req, res) => {
                
             })
 
-        }
-        
+        }     
     })
     // res.io.emit("server-send-order", {
     //     data : "orders"
