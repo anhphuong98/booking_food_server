@@ -41,7 +41,7 @@ module.exports = function (app) {
         // app.post('/api/order', authenticate('user'), orderController.order);
         app.post('/api/order', authenticate('user'), socketController.order);
         // shipper get order with status "0"
-        app.get('/api/neworder/shipper', authenticate('shipper'), orderController.getNewOrderByShipperId);
+        app.get('/api/neworder/shipper/:id', authenticate('shipper'), orderController.getNewOrderByShipperId);
         // shipper edit order's status
         app.put('/api/order/:id', authenticate('shipper'), orderController.update);
         app.get('/api/order/user/:id', authenticate('user'), orderController.getOrderByUserID);
