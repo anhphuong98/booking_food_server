@@ -396,6 +396,7 @@ const update = (req, res) => {
 }
 
 const getOrderByUserID = (req, res) => {
+    const Op = Sequelize.Op;
     db.user.findOne({
         where : {
             id : req.user.id
@@ -409,7 +410,8 @@ const getOrderByUserID = (req, res) => {
         }else {
             db.order.findAll({
                 where : {
-                    user_id : user.id
+                    user_id : user.id,
+                    [Op.or] : [{status : 2}, {status : 3}]
                 },
                 include : [
                     {
@@ -454,6 +456,12 @@ const getCurrentOrder = (req, res) => {
                     model : db.store
                 }]
             }).then(function(orders){
+                if(orders.length == 0){
+                    res.json({
+                        success : false,
+                        data : [] 
+                    })
+                }
                 res.json({
                     success : true,
                     data : orders

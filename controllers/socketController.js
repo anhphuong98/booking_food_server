@@ -115,7 +115,15 @@ const handle = (socket_io, socket) => {
                     console.log("Trong khi khi random: " + shipper_id);
                 } while (arrayIDShipper.includes(shipper_id.toString()));
                 console.log("Sau khi random: " + shipper_id);
-                socket_io.emit("server-send-order-" + shipper_id, {data : order_cancel_id});
+                db.order.update({
+                    shipper_id : shipper_id
+                }, {
+                    where : {
+                        id : order_cancel_id
+                    }
+                }).then(function() {
+                    socket_io.emit("server-send-order-" + shipper_id, {data : order_cancel_id});
+                }) 
             }
 
         });
